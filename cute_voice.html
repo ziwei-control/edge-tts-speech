@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎀 粘人版 TTS 语音试听 - 撒娇可爱风</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 50%, #ffecd2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        .header {
+            text-align: center;
+            color: #ff6b8a;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 4px rgba(255,255,255,0.8);
+        }
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        .header p {
+            font-size: 1.2em;
+            color: #ff8fa3;
+        }
+        .notice {
+            background: linear-gradient(135deg, #fff5f7 0%, #fff0f5 100%);
+            border: 3px solid #ffb6c1;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 25px;
+            color: #d63384;
+            box-shadow: 0 4px 15px rgba(255,105,180,0.2);
+        }
+        .notice h3 {
+            margin-bottom: 15px;
+            color: #c2185b;
+            font-size: 1.3em;
+        }
+        .notice ul {
+            margin-left: 20px;
+            line-height: 2;
+        }
+        .voice-card {
+            background: linear-gradient(135deg, #ffffff 0%, #fff5f8 100%);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 25px;
+            box-shadow: 0 8px 20px rgba(255,105,180,0.25);
+            border: 2px solid #ffd1dc;
+        }
+        .voice-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 3px dashed #ffb6c1;
+        }
+        .voice-name {
+            font-size: 1.8em;
+            font-weight: bold;
+            color: #ff6b8a;
+        }
+        .voice-desc {
+            color: #ff8fa3;
+            font-size: 1em;
+            margin-top: 8px;
+        }
+        .voice-tags {
+            display: flex;
+            gap: 10px;
+        }
+        .tag {
+            padding: 6px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: bold;
+        }
+        .tag-female { background: linear-gradient(135deg, #ffe0e9 0%, #ffb6c1 100%); color: #d63384; }
+        .tag-cute { background: linear-gradient(135deg, #ffe4e1 0%, #ffc0cb 100%); color: #c2185b; }
+        .tag-recommend { background: linear-gradient(135deg, #fff4e0 0%, #ffd700 100%); color: #ff8800; }
+        .audio-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+        .audio-box {
+            background: linear-gradient(135deg, #fff9fb 0%, #fff0f5 100%);
+            border-radius: 15px;
+            padding: 20px;
+            transition: all 0.3s;
+            border: 2px solid #ffe4e1;
+        }
+        .audio-box:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(255,105,180,0.3);
+            border-color: #ffb6c1;
+        }
+        .audio-label {
+            font-weight: bold;
+            color: #ff6b8a;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 1.1em;
+        }
+        .audio-text {
+            background: white;
+            padding: 12px;
+            border-radius: 10px;
+            color: #666;
+            font-size: 0.9em;
+            margin-bottom: 12px;
+            border-left: 4px solid #ff6b8a;
+            line-height: 1.8;
+        }
+        audio {
+            width: 100%;
+            height: 45px;
+            margin-top: 10px;
+        }
+        .tips {
+            background: linear-gradient(135deg, #ffffff 0%, #fff5f8 100%);
+            padding: 25px;
+            border-radius: 15px;
+            margin-top: 25px;
+            border: 2px solid #ffd1dc;
+        }
+        .tips h3 {
+            color: #ff6b8a;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+        .tips ul {
+            margin-left: 20px;
+            color: #666;
+            line-height: 2;
+        }
+        .comparison {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-top: 25px;
+            border: 2px solid #ffd1dc;
+        }
+        .comparison h3 {
+            color: #ff6b8a;
+            margin-bottom: 20px;
+            font-size: 1.3em;
+        }
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        .comparison-table th {
+            background: linear-gradient(135deg, #ff6b8a 0%, #ff8fa3 100%);
+            color: white;
+            padding: 12px;
+            text-align: left;
+        }
+        .comparison-table td {
+            padding: 12px;
+            border-bottom: 1px solid #ffe4e1;
+        }
+        .comparison-table tr:hover {
+            background: #fff5f8;
+        }
+        .emoji {
+            font-size: 1.3em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎀 粘人版 TTS 语音试听</h1>
+            <p>撒娇可爱风 - 让人无法拒绝的声音</p>
+        </div>
+
+        <div class="notice">
+            <h3>💕 粘人版特色</h3>
+            <ul>
+                <li><strong>撒娇语气词</strong>：嘛、呀、呢、哦、啦、哟</li>
+                <li><strong>叠词使用</strong>：宝宝、人家、想你、陪你</li>
+                <li><strong>拖长音</strong>：用"～"表示撒娇拖音</li>
+                <li><strong>慢语速</strong>：语速放慢 5-10%，更嗲更可爱</li>
+                <li><strong>情感符号</strong>：💕❤️✨🥺😘 增加可爱感</li>
+            </ul>
+        </div>
+
+        <!-- xiaoxiao 温柔姐姐 -->
+        <div class="voice-card">
+            <div class="voice-header">
+                <div>
+                    <div class="voice-name">🎤 小晓 (xiaoxiao) - 温柔姐姐</div>
+                    <div class="voice-desc">zh-CN-XiaoxiaoNeural - 语速 -10% | 温柔粘人</div>
+                </div>
+                <div class="voice-tags">
+                    <span class="tag tag-female">女声</span>
+                    <span class="tag tag-cute">🎀 粘人版</span>
+                    <span class="tag tag-recommend">⭐⭐⭐ 最推荐</span>
+                </div>
+            </div>
+            <div class="audio-grid">
+                <div class="audio-box">
+                    <div class="audio-label"><span class="emoji">💕</span> 欢迎宝宝</div>
+                    <div class="audio-text">"欢迎宝宝～来看直播呀！好想你哦～快坐下嘛～💕"</div>
+                    <audio controls src="output/cute/xiaoxiao_欢迎.mp3"></audio>
+                </div>
+                <div class="audio-box">
+                    <div class="audio-label"><span class="emoji">❤️</span> 感谢关注</div>
+                    <div class="audio-text">"谢谢宝宝～的关注！爱你哟～啾咪～❤️"</div>
+                    <audio controls src="output/cute/xiaoxiao_感谢.mp3"></audio>
+                </div>
+                <div class="audio-box">
+                    <div class="audio-label"><span class="emoji">✨</span> 求关注</div>
+                    <div class="audio-text">"点点关注嘛～人家会想你的～好不好呀～✨"</div>
+                    <audio controls src="output/cute/xiaoxiao_求关注.mp3"></audio>
+                </div>
+                <div class="audio-box">
+                    <div class="audio-label"><span class="emoji">🥺</span> 撒娇</div>
+                    <div class="audio-text">"不要走嘛～再陪人家一会儿～求求你啦～🥺"</div>
+                    <audio controls src="output/cute/xiaoxiao_撒娇.mp3"></audio>
+                </div>
+                <div class="audio-box">
+                    <div class="audio-label"><span class="emoji">💰</span> 促销</div>
+                    <div class="audio-text">"宝宝～这个超划算的！买一个嘛～人家帮你省钱呀～💰"</div>
+                    <audio controls src="output/cute/xiaoxiao_促销.mp3"></audio>
+                </div>
+                <div class="audio-box">
+                    <div class="audio-label"><span class="emoji">😘</span> 互动</div>
+                    <div class="audio-text">"宝宝最好了～给个小心心嘛～爱你～😘"</div>
+                    <audio controls src="output/cute/xiaoxiao_互动.mp3"></audio>
+                </div>
+            </div>
+        </div>
+
+        <!-- xiaoyi 活泼妹妹 -->
+        <div class="voice-card">
+            <div class="voice-header">
+                <div>
+                    <div class="voice-name">🎤 小艺 (xiaoyi) - 活泼妹妹</div>
+                    <div class="voice-desc">zh-CN-XiaoyiNeural - 语速 -5% | 音量 +5% | 活泼粘人</div>
+                </div>
+                <div class="voice-tags">
+                    <span class="tag tag-female">女声</span>
+                    <span class="tag tag-cute">🎀 粘人版</span>
+                    <span class="tag tag-recommend">⭐⭐ 推荐</span>
+                </div>
+            </div>
+            <div class="audio-grid">
+                <div class="audio-box">
+                    <div class="audio-label"><span class="emoji">💕</span> 欢迎宝宝</div>
+                    <div class="audio-text">"欢迎宝宝～来看直播呀！好想你哦～快坐下嘛～💕"</div>
+                    <audio controls src="output/cute/xiaoyi_欢迎.mp3"></audio>
+                </div>
+                <div class="audio-box">
+                    <div class="audio-label"><span class="emoji">❤️</span> 感谢关注</div>
+                    <div class="audio-text">"谢谢宝宝～的关注！爱你哟～啾咪～❤️"</div>
+                    <audio controls src="output/cute/xiaoyi_感谢.mp3"></audio>
+                </div>
+                <div class="audio-box">
+                    <div class="audio-label"><span class="emoji">✨</span> 求关注</div>
+                    <div class="audio-text">"点点关注嘛～人家会想你的～好不好呀～✨"</div>
+                    <audio controls src="output/cute/xiaoyi_求关注.mp3"></audio>
+                </div>
+                <div class="audio-box">
+                    <div class="audio-label"><span class="emoji">🥺</span> 撒娇</div>
+                    <div class="audio-text">"不要走嘛～再陪人家一会儿～求求你啦～🥺"</div>
+                    <audio controls src="output/cute/xiaoyi_撒娇.mp3"></audio>
+                </div>
+                <div class="audio-box">
+                    <div class="audio-label"><span class="emoji">💰</span> 促销</div>
+                    <div class="audio-text">"宝宝～这个超划算的！买一个嘛～人家帮你省钱呀～💰"</div>
+                    <audio controls src="output/cute/xiaoyi_促销.mp3"></audio>
+                </div>
+                <div class="audio-box">
+                    <div class="audio-label"><span class="emoji">😘</span> 互动</div>
+                    <div class="audio-text">"宝宝最好了～给个小心心嘛～爱你～😘"</div>
+                    <audio controls src="output/cute/xiaoyi_互动.mp3"></audio>
+                </div>
+            </div>
+        </div>
+
+        <div class="comparison">
+            <h3>📊 版本对比</h3>
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>特性</th>
+                        <th>原版</th>
+                        <th>优化版</th>
+                        <th>粘人版 ⭐</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>语速</strong></td>
+                        <td>正常 (0%)</td>
+                        <td>放慢 (-5%)</td>
+                        <td>更慢 (-10%)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>文案风格</strong></td>
+                        <td>标准</td>
+                        <td>添加停顿</td>
+                        <td>撒娇语气词</td>
+                    </tr>
+                    <tr>
+                        <td><strong>称呼</strong></td>
+                        <td>大家、观众</td>
+                        <td>大家、朋友</td>
+                        <td>宝宝、人家</td>
+                    </tr>
+                    <tr>
+                        <td><strong>语气词</strong></td>
+                        <td>无</td>
+                        <td>哦、呢</td>
+                        <td>嘛、呀、啦、哟、啾咪</td>
+                    </tr>
+                    <tr>
+                        <td><strong>拖音</strong></td>
+                        <td>无</td>
+                        <td>少量 ～</td>
+                        <td>大量 ～～</td>
+                    </tr>
+                    <tr>
+                        <td><strong>适合场景</strong></td>
+                        <td>正式直播</td>
+                        <td>通用直播</td>
+                        <td>娱乐、带货、二次元</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="tips">
+            <h3>💡 粘人话术技巧</h3>
+            <ul>
+                <li><strong>称呼要亲密</strong>：用"宝宝"代替"观众"，用"人家"代替"我"</li>
+                <li><strong>语气要软</strong>：句尾加"嘛"、"呀"、"呢"、"哦"、"啦"</li>
+                <li><strong>拖长音</strong>：用"～"表示撒娇，如"不要走嘛～～"</li>
+                <li><strong>示弱</strong>："人家会想你的"、"求求你啦"、"好不好嘛"</li>
+                <li><strong>赞美</strong>："宝宝最好了"、"宝宝真棒"、"爱你哟"</li>
+                <li><strong>肢体语言</strong>：配合"啾咪"、"比心"、"抱抱"等词</li>
+            </ul>
+        </div>
+
+        <div class="tips" style="margin-top: 20px;">
+            <h3>🎯 使用建议</h3>
+            <ul>
+                <li><strong>娱乐直播</strong>：粘人版效果最佳，增加互动和粘性</li>
+                <li><strong>带货直播</strong>：撒娇促销更容易促成下单</li>
+                <li><strong>游戏直播</strong>：适度使用，避免过度撒娇影响游戏体验</li>
+                <li><strong>知识分享</strong>：建议使用优化版，粘人版可能不够专业</li>
+                <li><strong>混合使用</strong>：重要内容用真人，互动内容用粘人 TTS</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>

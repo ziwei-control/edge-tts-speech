@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎤 TTS 语音试听 - 优化对比版</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+        .header h1 {
+            font-size: 2.2em;
+            margin-bottom: 10px;
+        }
+        .notice {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            color: #856404;
+        }
+        .notice h3 {
+            margin-bottom: 10px;
+            color: #664d03;
+        }
+        .voice-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+        .voice-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+        .voice-name {
+            font-size: 1.6em;
+            font-weight: bold;
+            color: #667eea;
+        }
+        .voice-desc {
+            color: #666;
+            font-size: 0.95em;
+            margin-top: 5px;
+        }
+        .voice-tags {
+            display: flex;
+            gap: 8px;
+        }
+        .tag {
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 0.85em;
+            font-weight: bold;
+        }
+        .tag-female { background: #ffe0e9; color: #d63384; }
+        .tag-natural { background: #e0ffe4; color: #00aa44; }
+        .tag-recommend { background: #fff4e0; color: #ff8800; }
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 15px;
+        }
+        .audio-box {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 15px;
+            transition: transform 0.2s;
+        }
+        .audio-box:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .audio-label {
+            font-weight: bold;
+            color: #555;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .audio-box.optimized .audio-label {
+            color: #00aa44;
+        }
+        audio {
+            width: 100%;
+            height: 40px;
+            margin-top: 8px;
+        }
+        .tips {
+            background: rgba(255,255,255,0.95);
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+        .tips h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+        .tips ul {
+            margin-left: 20px;
+            color: #555;
+            line-height: 1.8;
+        }
+        .alternative {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        .alternative h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+        .alt-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+        .alt-card {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+        .alt-card h4 {
+            color: #667eea;
+            margin-bottom: 8px;
+        }
+        .alt-card p {
+            color: #666;
+            font-size: 0.9em;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎤 TTS 语音试听 - 优化对比版</h1>
+            <p>对比原版和优化版，选择最自然的声音</p>
+        </div>
+
+        <div class="notice">
+            <h3>⚠️ 重要说明</h3>
+            <p>Edge TTS 的语音确实有些生硬，这是免费 TTS 的通病。我们提供了以下解决方案：</p>
+            <ul style="margin-top: 10px; margin-left: 20px;">
+                <li><strong>优化版</strong>：降低语速（-5%），添加停顿和语气词，更自然</li>
+                <li><strong>推荐语音</strong>：xiaoxiao（小晓）、xiaoyi（小艺）、xiaoxuan（小萱）相对自然</li>
+                <li><strong>替代方案</strong>：考虑使用付费 TTS 服务（Azure、Google、百度等）</li>
+            </ul>
+        </div>
+
+        <!-- xiaoxiao -->
+        <div class="voice-card">
+            <div class="voice-header">
+                <div>
+                    <div class="voice-name">🎤 小晓 (xiaoxiao)</div>
+                    <div class="voice-desc">zh-CN-XiaoxiaoNeural - 温暖自然</div>
+                </div>
+                <div class="voice-tags">
+                    <span class="tag tag-female">女声</span>
+                    <span class="tag tag-natural">✅ 已优化</span>
+                    <span class="tag tag-recommend">⭐ 最推荐</span>
+                </div>
+            </div>
+            <div class="comparison-grid">
+                <div class="audio-box">
+                    <div class="audio-label">📢 欢迎</div>
+                    <audio controls src="output/natural/xiaoxiao_欢迎.mp3"></audio>
+                    <div style="font-size: 0.85em; color: #00aa44; margin-top: 5px;">✅ 优化版（语速 -5%）</div>
+                </div>
+                <div class="audio-box">
+                    <div class="audio-label">🎉 互动</div>
+                    <audio controls src="output/natural/xiaoxiao_互动.mp3"></audio>
+                    <div style="font-size: 0.85em; color: #00aa44; margin-top: 5px;">✅ 优化版（语速 -5%）</div>
+                </div>
+                <div class="audio-box">
+                    <div class="audio-label">💰 促销</div>
+                    <audio controls src="output/natural/xiaoxiao_促销.mp3"></audio>
+                    <div style="font-size: 0.85em; color: #00aa44; margin-top: 5px;">✅ 优化版（语速 -5%）</div>
+                </div>
+                <div class="audio-box">
+                    <div class="audio-label">💕 温柔</div>
+                    <audio controls src="output/natural/xiaoxiao_温柔.mp3"></audio>
+                    <div style="font-size: 0.85em; color: #00aa44; margin-top: 5px;">✅ 优化版（语速 -5%）</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- xiaoyi -->
+        <div class="voice-card">
+            <div class="voice-header">
+                <div>
+                    <div class="voice-name">🎤 小艺 (xiaoyi)</div>
+                    <div class="voice-desc">zh-CN-XiaoyiNeural - 活泼亲切</div>
+                </div>
+                <div class="voice-tags">
+                    <span class="tag tag-female">女声</span>
+                    <span class="tag tag-natural">✅ 已优化</span>
+                    <span class="tag tag-recommend">⭐ 推荐</span>
+                </div>
+            </div>
+            <div class="comparison-grid">
+                <div class="audio-box">
+                    <div class="audio-label">📢 欢迎</div>
+                    <audio controls src="output/natural/xiaoyi_欢迎.mp3"></audio>
+                    <div style="font-size: 0.85em; color: #00aa44; margin-top: 5px;">✅ 优化版（正常语速）</div>
+                </div>
+                <div class="audio-box">
+                    <div class="audio-label">🎉 互动</div>
+                    <audio controls src="output/natural/xiaoyi_互动.mp3"></audio>
+                    <div style="font-size: 0.85em; color: #00aa44; margin-top: 5px;">✅ 优化版（正常语速）</div>
+                </div>
+                <div class="audio-box">
+                    <div class="audio-label">💰 促销</div>
+                    <audio controls src="output/natural/xiaoyi_促销.mp3"></audio>
+                    <div style="font-size: 0.85em; color: #00aa44; margin-top: 5px;">✅ 优化版（正常语速）</div>
+                </div>
+                <div class="audio-box">
+                    <div class="audio-label">💕 温柔</div>
+                    <audio controls src="output/natural/xiaoyi_温柔.mp3"></audio>
+                    <div style="font-size: 0.85em; color: #00aa44; margin-top: 5px;">✅ 优化版（正常语速）</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- xiaoxuan -->
+        <div class="voice-card">
+            <div class="voice-header">
+                <div>
+                    <div class="voice-name">🎤 小萱 (xiaoxuan)</div>
+                    <div class="voice-desc">zh-CN-XiaoxuanNeural - 温和亲切</div>
+                </div>
+                <div class="voice-tags">
+                    <span class="tag tag-female">女声</span>
+                    <span class="tag tag-natural">✅ 已优化</span>
+                    <span class="tag tag-recommend">⭐ 推荐</span>
+                </div>
+            </div>
+            <div class="comparison-grid">
+                <div class="audio-box">
+                    <div class="audio-label">📢 欢迎</div>
+                    <audio controls src="output/natural/xiaoxuan_欢迎.mp3"></audio>
+                    <div style="font-size: 0.85em; color: #00aa44; margin-top: 5px;">✅ 优化版（语速 -5%）</div>
+                </div>
+                <div class="audio-box">
+                    <div class="audio-label">🎉 互动</div>
+                    <audio controls src="output/natural/xiaoxuan_互动.mp3"></audio>
+                    <div style="font-size: 0.85em; color: #00aa44; margin-top: 5px;">✅ 优化版（语速 -5%）</div>
+                </div>
+                <div class="audio-box">
+                    <div class="audio-label">💰 促销</div>
+                    <audio controls src="output/natural/xiaoxuan_促销.mp3"></audio>
+                    <div style="font-size: 0.85em; color: #00aa44; margin-top: 5px;">✅ 优化版（语速 -5%）</div>
+                </div>
+                <div class="audio-box">
+                    <div class="audio-label">💕 温柔</div>
+                    <audio controls src="output/natural/xiaoxuan_温柔.mp3"></audio>
+                    <div style="font-size: 0.85em; color: #00aa44; margin-top: 5px;">✅ 优化版（语速 -5%）</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="tips">
+            <h3>💡 如何让语音更自然？</h3>
+            <ul>
+                <li><strong>降低语速</strong>：语速放慢 5-10%，减少机械感</li>
+                <li><strong>添加停顿</strong>：用"～"、"、"、"。"控制节奏</li>
+                <li><strong>使用语气词</strong>：添加"哦"、"呢"、"啦"等</li>
+                <li><strong>选择合适语音</strong>：xiaoxiao、xiaoyi、xiaoxuan 相对自然</li>
+                <li><strong>混合真人语音</strong>：重要内容用真人，重复内容用 TTS</li>
+                <li><strong>后期处理</strong>：添加混响、均衡器让声音更温暖</li>
+            </ul>
+        </div>
+
+        <div class="alternative">
+            <h3>🎯 更自然的替代方案</h3>
+            <p>如果 Edge TTS 还是太生硬，可以考虑以下更专业的 TTS 服务：</p>
+            <div class="alt-grid">
+                <div class="alt-card">
+                    <h4>🏆 Azure TTS（付费）</h4>
+                    <p>微软官方服务，音质最佳，支持情感控制。$5/100 万字符。适合专业直播。</p>
+                </div>
+                <div class="alt-card">
+                    <h4>🇨🇳 百度 TTS</h4>
+                    <p>中文优化好，有度晓晓等自然语音。免费版够用，付费版更自然。</p>
+                </div>
+                <div class="alt-card">
+                    <h4>🇨🇳 阿里 TTS</h4>
+                    <p>阿里云智能语音，支持多种方言。适合电商直播场景。</p>
+                </div>
+                <div class="alt-card">
+                    <h4>🎙️ 真人录音</h4>
+                    <p>最自然！录制常用语句（欢迎、感谢、促销），循环播放。一次性投入，永久使用。</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="tips" style="margin-top: 20px;">
+            <h3>🎤 推荐配置</h3>
+            <ul>
+                <li><strong>通用欢迎</strong>：xiaoxiao（语速 -5%，音量 0%）</li>
+                <li><strong>感谢互动</strong>：xiaoyi（语速 0%，音量 0%）</li>
+                <li><strong>温柔内容</strong>：xiaoxuan（语速 -5%，音量 0%）</li>
+                <li><strong>文案优化</strong>：添加"～"、"❤️"、"✨"等符号增加情感</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>

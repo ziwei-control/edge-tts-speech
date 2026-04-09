@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎤 Edge TTS 语音试听 - 直播口播语音库</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .test-text {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .test-text label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .test-text textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            font-size: 16px;
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .test-text textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .voice-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 15px;
+        }
+
+        .voice-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .voice-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+
+        .voice-card h3 {
+            color: #667eea;
+            margin-bottom: 8px;
+            font-size: 1.3em;
+        }
+
+        .voice-card .voice-id {
+            color: #888;
+            font-size: 0.85em;
+            font-family: monospace;
+            margin-bottom: 12px;
+        }
+
+        .voice-card .tags {
+            display: flex;
+            gap: 6px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+
+        .tag {
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.8em;
+            font-weight: bold;
+        }
+
+        .tag-female {
+            background: #ffe0e9;
+            color: #d63384;
+        }
+
+        .tag-male {
+            background: #e0f0ff;
+            color: #0066cc;
+        }
+
+        .tag-child {
+            background: #fff4e0;
+            color: #ff8800;
+        }
+
+        .tag-recommend {
+            background: #e0ffe4;
+            color: #00aa44;
+        }
+
+        .audio-controls {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin-top: 15px;
+        }
+
+        .play-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            transition: transform 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .play-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .play-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .play-btn.playing {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+
+        .loading {
+            color: #888;
+            font-size: 0.9em;
+        }
+
+        .status {
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 6px;
+            font-size: 0.9em;
+        }
+
+        .status.success {
+            background: #e0ffe4;
+            color: #00aa44;
+        }
+
+        .status.error {
+            background: #ffe0e0;
+            color: #cc0000;
+        }
+
+        .info-box {
+            background: rgba(255,255,255,0.95);
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .info-box h3 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .info-box ul {
+            margin-left: 20px;
+            color: #555;
+        }
+
+        .info-box li {
+            margin-bottom: 5px;
+        }
+
+        .batch-controls {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .batch-controls button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        .batch-controls button:hover {
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎤 Edge TTS 语音试听</h1>
+            <p>微软 Azure 在线语音合成 - 直播口播专用语音库</p>
+        </div>
+
+        <div class="info-box">
+            <h3>📖 使用说明</h3>
+            <ul>
+                <li>在下方输入要试听的文字（默认："欢迎观看直播！感谢大家的关注！"）</li>
+                <li>点击任意语音卡片的"🔊 试听"按钮</li>
+                <li>等待生成（约 2-5 秒），然后自动播放</li>
+                <li>可以调整语速和音量进行试听</li>
+                <li>共 <strong>20 种中文语音</strong>（14 女声 + 6 男声）</li>
+            </ul>
+        </div>
+
+        <div class="test-text">
+            <label>📝 试听文本：</label>
+            <textarea id="testText">欢迎观看直播！感谢大家的关注！喜欢主播的记得点个关注哦！</textarea>
+            
+            <div style="margin-top: 15px; display: flex; gap: 15px; align-items: center;">
+                <div>
+                    <label style="display: inline-block; margin-bottom: 5px;">🐌 语速调整：</label>
+                    <input type="range" id="rate" min="-50" max="50" value="0" style="width: 150px;">
+                    <span id="rateValue">0%</span>
+                </div>
+                <div>
+                    <label style="display: inline-block; margin-bottom: 5px;">🔊 音量调整：</label>
+                    <input type="range" id="volume" min="-100" max="100" value="0" style="width: 150px;">
+                    <span id="volumeValue">0%</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="batch-controls">
+            <h3>🎯 快速试听推荐</h3>
+            <p style="color: #666; margin: 10px 0;">不确定选哪个？先试听这几个最受欢迎的：</p>
+            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                <button onclick="quickTest('xiaoxiao')">👩 小晓（通用女声）</button>
+                <button onclick="quickTest('xiaoyi')">👩 小艺（活泼女声）</button>
+                <button onclick="quickTest('yunhao')">👨 云浩（广告男声）</button>
+                <button onclick="quickTest('xiaomo')">👩 小墨（温柔女声）</button>
+            </div>
+        </div>
+
+        <div class="voice-grid" id="voiceGrid">
+            <!-- 语音卡片将通过 JS 生成 -->
+        </div>
+
+        <div id="globalStatus"></div>
+    </div>
+
+    <script>
+        // 语音列表
+        const voices = [
+            { id: 'xiaoxiao', name: '小晓', voiceId: 'zh-CN-XiaoxiaoNeural', gender: 'female', tags: ['温暖', '通用', '推荐'] },
+            { id: 'xiaoyi', name: '小艺', voiceId: 'zh-CN-XiaoyiNeural', gender: 'female', tags: ['活泼', '亲切'] },
+            { id: 'yunjian', name: '云健', voiceId: 'zh-CN-YunjianNeural', gender: 'male', tags: ['运动', '激情'] },
+            { id: 'xiaochen', name: '小晨', voiceId: 'zh-CN-XiaochenNeural', gender: 'female', tags: ['新闻', '正式'] },
+            { id: 'xiaohan', name: '小涵', voiceId: 'zh-CN-XiaohanNeural', gender: 'female', tags: ['严肃', '专业'] },
+            { id: 'xiaomeng', name: '小萌', voiceId: 'zh-CN-XiaomengNeural', gender: 'female', tags: ['可爱', '活泼'] },
+            { id: 'xiaomo', name: '小墨', voiceId: 'zh-CN-XiaomoNeural', gender: 'female', tags: ['温柔', '情感', '推荐'] },
+            { id: 'xiaoqiu', name: '小秋', voiceId: 'zh-CN-XiaoqiuNeural', gender: 'female', tags: ['客服', '友好'] },
+            { id: 'xiaorui', name: '小睿', voiceId: 'zh-CN-XiaoruiNeural', gender: 'female', tags: ['电话', '客服'] },
+            { id: 'xiaoshuang', name: '小爽', voiceId: 'zh-CN-XiaoshuangNeural', gender: 'child', tags: ['儿童', '活泼'] },
+            { id: 'xiaoxuan', name: '小萱', voiceId: 'zh-CN-XiaoxuanNeural', gender: 'female', tags: ['温和', '亲切'] },
+            { id: 'xiaoyan', name: '小颜', voiceId: 'zh-CN-XiaoyanNeural', gender: 'female', tags: ['客服', '友好'] },
+            { id: 'xiaoyou', name: '小优', voiceId: 'zh-CN-XiaoyouNeural', gender: 'child', tags: ['儿童', '可爱'] },
+            { id: 'xiaozhen', name: '小珍', voiceId: 'zh-CN-XiaozhenNeural', gender: 'female', tags: ['客服', '专业'] },
+            { id: 'yunfeng', name: '云峰', voiceId: 'zh-CN-YunfengNeural', gender: 'male', tags: ['严肃', '正式'] },
+            { id: 'yunhao', name: '云浩', voiceId: 'zh-CN-YunhaoNeural', gender: 'male', tags: ['广告', '促销', '推荐'] },
+            { id: 'yunxia', name: '云霞', voiceId: 'zh-CN-YunxiaNeural', gender: 'male', tags: ['激情', '活力'] },
+            { id: 'yunxi', name: '云希', voiceId: 'zh-CN-YunxiNeural', gender: 'male', tags: ['故事', '叙述'] },
+            { id: 'yunye', name: '云野', voiceId: 'zh-CN-YunyeNeural', gender: 'male', tags: ['专业', '讲解', '推荐'] },
+            { id: 'yunze', name: '云泽', voiceId: 'zh-CN-YunzeNeural', gender: 'male', tags: ['纪录片', '正式'] }
+        ];
+
+        // 更新滑块值显示
+        document.getElementById('rate').addEventListener('input', function() {
+            document.getElementById('rateValue').textContent = this.value + '%';
+        });
+        document.getElementById('volume').addEventListener('input', function() {
+            document.getElementById('volumeValue').textContent = this.value + '%';
+        });
+
+        // 生成语音卡片
+        function renderVoiceCards() {
+            const grid = document.getElementById('voiceGrid');
+            grid.innerHTML = '';
+
+            voices.forEach(voice => {
+                const card = document.createElement('div');
+                card.className = 'voice-card';
+
+                const genderTag = voice.gender === 'female' ? 'tag-female' : 
+                                 voice.gender === 'male' ? 'tag-male' : 'tag-child';
+                const genderText = voice.gender === 'female' ? '女声' : 
+                                  voice.gender === 'male' ? '男声' : '童声';
+
+                const tags = voice.tags.map(tag => 
+                    `<span class="tag ${tag === '推荐' ? 'tag-recommend' : genderTag}">${tag}</span>`
+                ).join('');
+
+                card.innerHTML = `
+                    <h3>🎤 ${voice.name}</h3>
+                    <div class="voice-id">${voice.voiceId}</div>
+                    <div class="tags">
+                        <span class="tag ${genderTag}">${genderText}</span>
+                        ${tags}
+                    </div>
+                    <div class="audio-controls">
+                        <button class="play-btn" onclick="playVoice('${voice.id}')">
+                            🔊 试听
+                        </button>
+                        <span class="loading" id="loading-${voice.id}"></span>
+                    </div>
+                    <div id="status-${voice.id}"></div>
+                `;
+
+                grid.appendChild(card);
+            });
+        }
+
+        // 播放语音
+        async function playVoice(voiceId) {
+            const text = document.getElementById('testText').value;
+            const rate = document.getElementById('rate').value;
+            const volume = document.getElementById('volume').value;
+
+            const btn = event.target;
+            const loading = document.getElementById(`loading-${voiceId}`);
+            const status = document.getElementById(`status-${voiceId}`);
+
+            // 禁用按钮
+            btn.disabled = true;
+            btn.textContent = '⏳ 生成中...';
+            btn.classList.add('playing');
+            loading.textContent = '正在生成音频（约 2-5 秒）...';
+            status.innerHTML = '';
+
+            try {
+                // 调用后端 API 生成语音
+                const response = await fetch('/api/tts', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        text: text,
+                        voice: voiceId,
+                        rate: parseInt(rate),
+                        volume: parseInt(volume)
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error('生成失败');
+                }
+
+                // 获取音频并播放
+                const audioBlob = await response.blob();
+                const audioUrl = URL.createObjectURL(audioBlob);
+                const audio = new Audio(audioUrl);
+
+                loading.textContent = '▶️ 播放中...';
+                
+                audio.onended = () => {
+                    btn.disabled = false;
+                    btn.textContent = '🔊 试听';
+                    btn.classList.remove('playing');
+                    loading.textContent = '';
+                    status.innerHTML = '<div class="status success">✅ 播放完成</div>';
+                };
+
+                audio.onerror = () => {
+                    throw new Error('播放失败');
+                };
+
+                await audio.play();
+
+            } catch (error) {
+                console.error('Error:', error);
+                btn.disabled = false;
+                btn.textContent = '🔊 试听';
+                btn.classList.remove('playing');
+                loading.textContent = '';
+                status.innerHTML = `<div class="status error">❌ 错误：${error.message}</div>`;
+            }
+        }
+
+        // 快速试听
+        function quickTest(voiceId) {
+            // 滚动到对应语音卡片
+            const cards = document.querySelectorAll('.voice-card');
+            const index = voices.findIndex(v => v.id === voiceId);
+            if (index >= 0 && cards[index]) {
+                cards[index].scrollIntoView({ behavior: 'smooth', block: 'center' });
+                
+                // 模拟点击
+                setTimeout(() => {
+                    const btn = cards[index].querySelector('.play-btn');
+                    btn.click();
+                }, 500);
+            }
+        }
+
+        // 初始化
+        renderVoiceCards();
+    </script>
+</body>
+</html>

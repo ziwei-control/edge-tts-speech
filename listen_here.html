@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎤 Edge TTS 语音试听</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+        .voice-list {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .voice-item {
+            border-bottom: 1px solid #eee;
+            padding: 15px 0;
+        }
+        .voice-item:last-child {
+            border-bottom: none;
+        }
+        .voice-name {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 5px;
+        }
+        .voice-id {
+            color: #888;
+            font-size: 0.85em;
+            font-family: monospace;
+            margin-bottom: 10px;
+        }
+        .tags {
+            display: flex;
+            gap: 6px;
+            margin-bottom: 10px;
+        }
+        .tag {
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.8em;
+            font-weight: bold;
+        }
+        .tag-female { background: #ffe0e9; color: #d63384; }
+        .tag-male { background: #e0f0ff; color: #0066cc; }
+        .tag-recommend { background: #e0ffe4; color: #00aa44; }
+        .audio-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+            margin-top: 10px;
+        }
+        .audio-item {
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 6px;
+        }
+        .audio-label {
+            font-size: 0.9em;
+            color: #555;
+            margin-bottom: 5px;
+        }
+        audio {
+            width: 100%;
+            height: 35px;
+        }
+        .info {
+            background: rgba(255,255,255,0.95);
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        .info h3 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🎤 Edge TTS 语音试听</h1>
+        <p>微软 Azure 在线语音合成 - 直播口播专用</p>
+    </div>
+
+    <div class="info">
+        <h3>📖 使用说明</h3>
+        <ul>
+            <li>共 <strong>6 个可用语音</strong>（4 女声 + 2 男声）</li>
+            <li>每个语音提供 4 种场景试听：通用、活泼、促销、温柔</li>
+            <li>点击播放按钮即可试听</li>
+            <li>文件位置：<code>/home/admin/projects/live-tts/output/demo/</code></li>
+        </ul>
+    </div>
+
+    <div class="voice-list">
+        <!-- xiaoxiao -->
+        <div class="voice-item">
+            <div class="voice-name">🎤 小晓 (xiaoxiao)</div>
+            <div class="voice-id">zh-CN-XiaoxiaoNeural</div>
+            <div class="tags">
+                <span class="tag tag-female">女声</span>
+                <span class="tag tag-recommend">⭐ 温暖通用</span>
+                <span class="tag tag-recommend">⭐ 推荐</span>
+            </div>
+            <div class="audio-grid">
+                <div class="audio-item">
+                    <div class="audio-label">📢 通用</div>
+                    <audio controls src="output/demo/xiaoxiao_通用.mp3"></audio>
+                </div>
+                <div class="audio-item">
+                    <div class="audio-label">🎉 活泼</div>
+                    <audio controls src="output/demo/xiaoxiao_活泼.mp3"></audio>
+                </div>
+                <div class="audio-item">
+                    <div class="audio-label">💰 促销</div>
+                    <audio controls src="output/demo/xiaoxiao_促销.mp3"></audio>
+                </div>
+                <div class="audio-item">
+                    <div class="audio-label">💕 温柔</div>
+                    <audio controls src="output/demo/xiaoxiao_温柔.mp3"></audio>
+                </div>
+            </div>
+        </div>
+
+        <!-- xiaoyi -->
+        <div class="voice-item">
+            <div class="voice-name">🎤 小艺 (xiaoyi)</div>
+            <div class="voice-id">zh-CN-XiaoyiNeural</div>
+            <div class="tags">
+                <span class="tag tag-female">女声</span>
+                <span class="tag">活泼亲切</span>
+            </div>
+            <div class="audio-grid">
+                <div class="audio-item">
+                    <div class="audio-label">📢 通用</div>
+                    <audio controls src="output/demo/xiaoyi_通用.mp3"></audio>
+                </div>
+                <div class="audio-item">
+                    <div class="audio-label">🎉 活泼</div>
+                    <audio controls src="output/demo/xiaoyi_活泼.mp3"></audio>
+                </div>
+                <div class="audio-item">
+                    <div class="audio-label">💰 促销</div>
+                    <audio controls src="output/demo/xiaoyi_促销.mp3"></audio>
+                </div>
+                <div class="audio-item">
+                    <div class="audio-label">💕 温柔</div>
+                    <audio controls src="output/demo/xiaoyi_温柔.mp3"></audio>
+                </div>
+            </div>
+        </div>
+
+        <!-- yunjian -->
+        <div class="voice-item">
+            <div class="voice-name">🎤 云健 (yunjian)</div>
+            <div class="voice-id">zh-CN-YunjianNeural</div>
+            <div class="tags">
+                <span class="tag tag-male">男声</span>
+                <span class="tag">运动激情</span>
+            </div>
+            <div class="audio-grid">
+                <div class="audio-item">
+                    <div class="audio-label">📢 通用</div>
+                    <audio controls src="output/demo/yunjian_通用.mp3"></audio>
+                </div>
+                <div class="audio-item">
+                    <div class="audio-label">🎉 活泼</div>
+                    <audio controls src="output/demo/yunjian_活泼.mp3"></audio>
+                </div>
+                <div class="audio-item">
+                    <div class="audio-label">💰 促销</div>
+                    <audio controls src="output/demo/yunjian_促销.mp3"></audio>
+                </div>
+                <div class="audio-item">
+                    <div class="audio-label">💕 温柔</div>
+                    <audio controls src="output/demo/yunjian_温柔.mp3"></audio>
+                </div>
+            </div>
+        </div>
+
+        <!-- xiaoxuan -->
+        <div class="voice-item">
+            <div class="voice-name">🎤 小萱 (xiaoxuan)</div>
+            <div class="voice-id">zh-CN-XiaoxuanNeural</div>
+            <div class="tags">
+                <span class="tag tag-female">女声</span>
+                <span class="tag">温和亲切</span>
+            </div>
+            <div class="audio-grid">
+                <div class="audio-item">
+                    <div class="audio-label">📢 通用</div>
+                    <audio controls src="output/demo/xiaoxuan_通用.mp3"></audio>
+                </div>
+                <div class="audio-item">
+                    <div class="audio-label">🎉 活泼</div>
+                    <audio controls src="output/demo/xiaoxuan_活泼.mp3"></audio>
+                </div>
+                <div class="audio-item">
+                    <div class="audio-label">💰 促销</div>
+                    <audio controls src="output/demo/xiaoxuan_促销.mp3"></audio>
+                </div>
+                <div class="audio-item">
+                    <div class="audio-label">💕 温柔</div>
+                    <audio controls src="output/demo/xiaoxuan_温柔.mp3"></audio>
+                </div>
+            </div>
+        </div>
+
+        <!-- yunxia -->
+        <div class="voice-item">
+            <div class="voice-name">🎤 云霞 (yunxia)</div>
+            <div class="voice-id">zh-CN-YunxiaNeural</div>
+            <div class="tags">
+                <span class="tag tag-male">男声</span>
+                <span class="tag">激情活力</span>
+            </div>
+            <div class="audio-grid">
+                <div class="audio-item">
+                    <div class="audio-label">📢 通用</div>
+                    <audio controls src="output/demo/yunxia_通用.mp3"></audio>
+                </div>
+                <div class="audio-item">
+                    <div class="audio-label">🎉 活泼</div>
+                    <audio controls src="output/demo/yunxia_活泼.mp3"></audio>
+                </div>
+                <div class="audio-item">
+                    <div class="audio-label">💰 促销</div>
+                    <audio controls src="output/demo/yunxia_促销.mp3"></audio>
+                </div>
+                <div class="audio-item">
+                    <div class="audio-label">💕 温柔</div>
+                    <audio controls src="output/demo/yunxia_温柔.mp3"></audio>
+                </div>
+            </div>
+        </div>
+
+        <!-- yunxi -->
+        <div class="voice-item">
+            <div class="voice-name">🎤 云希 (yunxi)</div>
+            <div class="voice-id">zh-CN-YunxiNeural</div>
+            <div class="tags">
+                <span class="tag tag-male">男声</span>
+                <span class="tag">故事叙述</span>
+            </div>
+            <div class="audio-grid">
+                <div class="audio-item">
+                    <div class="audio-label">📢 通用</div>
+                    <audio controls src="output/demo/yunxi_通用.mp3"></audio>
+                </div>
+                <div class="audio-item">
+                    <div class="audio-label">🎉 活泼</div>
+                    <audio controls src="output/demo/yunxi_活泼.mp3"></audio>
+                </div>
+                <div class="audio-item">
+                    <div class="audio-label">💰 促销</div>
+                    <audio controls src="output/demo/yunxi_促销.mp3"></audio>
+                </div>
+                <div class="audio-item">
+                    <div class="audio-label">💕 温柔</div>
+                    <audio controls src="output/demo/yunxi_温柔.mp3"></audio>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="info" style="margin-top: 20px;">
+        <h3>🎯 推荐选择</h3>
+        <ul>
+            <li><strong>通用欢迎</strong>：小晓 (xiaoxiao) - 温暖女声，适合大部分场景</li>
+            <li><strong>感谢互动</strong>：小艺 (xiaoyi) - 活泼女声，更有亲和力</li>
+            <li><strong>促销播报</strong>：云霞 (yunxia) - 激情男声，营造紧迫感</li>
+            <li><strong>温柔内容</strong>：小萱 (xiaoxuan) - 温和女声，情感表达好</li>
+        </ul>
+    </div>
+</body>
+</html>

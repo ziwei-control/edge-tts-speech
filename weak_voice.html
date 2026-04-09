@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🌸 柔弱版 TTS 语音 - 喘气虚弱轻轻柔柔</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        .header {
+            text-align: center;
+            color: #667eea;
+            margin-bottom: 30px;
+        }
+        .header h1 {
+            font-size: 2.3em;
+            margin-bottom: 10px;
+        }
+        .header p {
+            font-size: 1.1em;
+            color: #7a8b9a;
+        }
+        .notice {
+            background: linear-gradient(135deg, #fff5f7 0%, #f0f4f8 100%);
+            border: 2px solid #e2e8f0;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 25px;
+            color: #4a5568;
+        }
+        .notice h3 {
+            margin-bottom: 15px;
+            color: #667eea;
+        }
+        .notice ul {
+            margin-left: 20px;
+            line-height: 2;
+        }
+        .voice-card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 25px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+            border-left: 5px solid #667eea;
+        }
+        .voice-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #e2e8f0;
+        }
+        .voice-name {
+            font-size: 1.7em;
+            font-weight: bold;
+            color: #667eea;
+        }
+        .voice-desc {
+            color: #718096;
+            font-size: 1em;
+            margin-top: 8px;
+        }
+        .voice-tags {
+            display: flex;
+            gap: 10px;
+        }
+        .tag {
+            padding: 6px 15px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: bold;
+        }
+        .tag-female { background: #ffe0e9; color: #d63384; }
+        .tag-weak { background: #e0f0ff; color: #0066cc; }
+        .tag-recommend { background: #fff4e0; color: #ff8800; }
+        .audio-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        .audio-box {
+            background: #f7fafc;
+            border-radius: 12px;
+            padding: 20px;
+            transition: all 0.3s;
+            border: 2px solid #e2e8f0;
+        }
+        .audio-box:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+            border-color: #667eea;
+        }
+        .audio-label {
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 1.1em;
+        }
+        .audio-text {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            color: #4a5568;
+            font-size: 0.95em;
+            margin-bottom: 12px;
+            border-left: 4px solid #667eea;
+            line-height: 2;
+        }
+        .breath-mark {
+            color: #fc8181;
+            font-weight: bold;
+        }
+        .pause-mark {
+            color: #a0aec0;
+            font-style: italic;
+        }
+        audio {
+            width: 100%;
+            height: 45px;
+            margin-top: 10px;
+        }
+        .tips {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin-top: 25px;
+            border: 2px solid #e2e8f0;
+        }
+        .tips h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+        .tips ul {
+            margin-left: 20px;
+            color: #4a5568;
+            line-height: 2;
+        }
+        .comparison {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-top: 25px;
+            border: 2px solid #e2e8f0;
+        }
+        .comparison h3 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 1.3em;
+        }
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        .comparison-table th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px;
+            text-align: left;
+        }
+        .comparison-table td {
+            padding: 12px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .comparison-table tr:hover {
+            background: #f7fafc;
+        }
+        .warning {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+            color: #856404;
+        }
+        .warning h4 {
+            color: #664d03;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🌸 柔弱版 TTS 语音试听</h1>
+            <p>喘气、虚弱、轻轻柔柔、说话有延迟感</p>
+        </div>
+
+        <div class="notice">
+            <h3>💨 柔弱版特色</h3>
+            <ul>
+                <li><strong>喘气声</strong>：添加"呼～"、"呼..."模拟呼吸声</li>
+                <li><strong>延迟感</strong>：用"..."表示说话停顿、断断续续</li>
+                <li><strong>轻轻柔柔</strong>：语速 -20%，音量 -10%，更慢更轻</li>
+                <li><strong>虚弱语气</strong>："好累"、"别走"、"陪我"等示弱词汇</li>
+                <li><strong>拖长音</strong>：用"～"表示虚弱拖音</li>
+            </ul>
+        </div>
+
+        <!-- xiaoxiao 温柔柔弱 -->
+        <div class="voice-card">
+            <div class="voice-header">
+                <div>
+                    <div class="voice-name">🎤 小晓 (xiaoxiao) - 温柔柔弱</div>
+                    <div class="voice-desc">语速 -20% | 音量 -10% | 喘气虚弱</div>
+                </div>
+                <div class="voice-tags">
+                    <span class="tag tag-female">女声</span>
+                    <span class="tag tag-weak">🌸 柔弱版</span>
+                    <span class="tag tag-recommend">⭐⭐⭐ 最推荐</span>
+                </div>
+            </div>
+            <div class="audio-grid">
+                <div class="audio-box">
+                    <div class="audio-label">💕 欢迎</div>
+                    <div class="audio-text">
+                        <span class="breath-mark">呼～</span>欢迎<span class="pause-mark">...</span>宝宝<span class="pause-mark">...</span>来看我<span class="pause-mark">...</span><span class="breath-mark">呼...</span>好累哦<span class="pause-mark">...</span>坐下<span class="pause-mark">...</span>陪陪我<span class="pause-mark">...</span>💕
+                    </div>
+                    <audio controls src="output/weak/xiaoxiao_欢迎.mp3"></audio>
+                </div>
+                <div class="audio-box">
+                    <div class="audio-label">❤️ 感谢</div>
+                    <div class="audio-text">
+                        <span class="breath-mark">呼～</span>谢谢<span class="pause-mark">...</span>宝宝<span class="pause-mark">...</span>的关注<span class="pause-mark">...</span><span class="breath-mark">呼...</span>好开心<span class="pause-mark">...</span>爱你<span class="pause-mark">...</span>啾咪<span class="pause-mark">...</span>❤️
+                    </div>
+                    <audio controls src="output/weak/xiaoxiao_感谢.mp3"></audio>
+                </div>
+                <div class="audio-box">
+                    <div class="audio-label">✨ 求关注</div>
+                    <div class="audio-text">
+                        <span class="breath-mark">呼...</span>点点<span class="pause-mark">...</span>关注嘛<span class="pause-mark">...</span><span class="breath-mark">呼...</span>人家<span class="pause-mark">...</span>会想你<span class="pause-mark">...</span>的<span class="pause-mark">...</span>好不好<span class="pause-mark">...</span>✨
+                    </div>
+                    <audio controls src="output/weak/xiaoxiao_求关注.mp3"></audio>
+                </div>
+                <div class="audio-box">
+                    <div class="audio-label">🥺 撒娇</div>
+                    <div class="audio-text">
+                        <span class="breath-mark">呼～</span>不要<span class="pause-mark">...</span>走嘛<span class="pause-mark">...</span><span class="breath-mark">呼...</span>再陪<span class="pause-mark">...</span>人家<span class="pause-mark">...</span>一会<span class="pause-mark">...</span>求求你<span class="pause-mark">...</span>🥺
+                    </div>
+                    <audio controls src="output/weak/xiaoxiao_撒娇.mp3"></audio>
+                </div>
+                <div class="audio-box">
+                    <div class="audio-label">😮‍💨 虚弱</div>
+                    <div class="audio-text">
+                        <span class="breath-mark">呼...</span><span class="breath-mark">呼...</span>今天<span class="pause-mark">...</span>好累<span class="pause-mark">...</span><span class="breath-mark">呼...</span>宝宝<span class="pause-mark">...</span>别走<span class="pause-mark">...</span>陪我<span class="pause-mark">...</span>💕
+                    </div>
+                    <audio controls src="output/weak/xiaoxiao_虚弱.mp3"></audio>
+                </div>
+                <div class="audio-box">
+                    <div class="audio-label">😘 互动</div>
+                    <div class="audio-text">
+                        <span class="breath-mark">呼...</span>宝宝<span class="pause-mark">...</span>最好了<span class="pause-mark">...</span><span class="breath-mark">呼...</span>给个<span class="pause-mark">...</span>小心心<span class="pause-mark">...</span>嘛<span class="pause-mark">...</span>爱你<span class="pause-mark">...</span>😘
+                    </div>
+                    <audio controls src="output/weak/xiaoxiao_互动.mp3"></audio>
+                </div>
+            </div>
+        </div>
+
+        <!-- xiaoxuan 轻柔无力 -->
+        <div class="voice-card">
+            <div class="voice-header">
+                <div>
+                    <div class="voice-name">🎤 小萱 (xiaoxuan) - 轻柔无力</div>
+                    <div class="voice-desc">语速 -20% | 音量 -10% | 轻柔虚弱</div>
+                </div>
+                <div class="voice-tags">
+                    <span class="tag tag-female">女声</span>
+                    <span class="tag tag-weak">🌸 柔弱版</span>
+                    <span class="tag tag-recommend">⭐⭐ 推荐</span>
+                </div>
+            </div>
+            <div class="audio-grid">
+                <div class="audio-box">
+                    <div class="audio-label">💕 欢迎</div>
+                    <audio controls src="output/weak/xiaoxuan_欢迎.mp3"></audio>
+                </div>
+                <div class="audio-box">
+                    <div class="audio-label">❤️ 感谢</div>
+                    <audio controls src="output/weak/xiaoxuan_感谢.mp3"></audio>
+                </div>
+                <div class="audio-box">
+                    <div class="audio-label">✨ 求关注</div>
+                    <audio controls src="output/weak/xiaoxuan_求关注.mp3"></audio>
+                </div>
+                <div class="audio-box">
+                    <div class="audio-label">🥺 撒娇</div>
+                    <audio controls src="output/weak/xiaoxuan_撒娇.mp3"></audio>
+                </div>
+                <div class="audio-box">
+                    <div class="audio-label">😮‍💨 虚弱</div>
+                    <audio controls src="output/weak/xiaoxuan_虚弱.mp3"></audio>
+                </div>
+                <div class="audio-box">
+                    <div class="audio-label">😘 互动</div>
+                    <audio controls src="output/weak/xiaoxuan_互动.mp3"></audio>
+                </div>
+            </div>
+        </div>
+
+        <!-- xiaoyi 虚弱活泼 -->
+        <div class="voice-card">
+            <div class="voice-header">
+                <div>
+                    <div class="voice-name">🎤 小艺 (xiaoyi) - 虚弱活泼</div>
+                    <div class="voice-desc">语速 -15% | 音量 -5% | 虚弱但仍活泼</div>
+                </div>
+                <div class="voice-tags">
+                    <span class="tag tag-female">女声</span>
+                    <span class="tag tag-weak">🌸 柔弱版</span>
+                    <span class="tag tag-recommend">⭐⭐ 推荐</span>
+                </div>
+            </div>
+            <div class="audio-grid">
+                <div class="audio-box">
+                    <div class="audio-label">💕 欢迎</div>
+                    <audio controls src="output/weak/xiaoyi_欢迎.mp3"></audio>
+                </div>
+                <div class="audio-box">
+                    <div class="audio-label">❤️ 感谢</div>
+                    <audio controls src="output/weak/xiaoyi_感谢.mp3"></audio>
+                </div>
+                <div class="audio-box">
+                    <div class="audio-label">✨ 求关注</div>
+                    <audio controls src="output/weak/xiaoyi_求关注.mp3"></audio>
+                </div>
+                <div class="audio-box">
+                    <div class="audio-label">🥺 撒娇</div>
+                    <audio controls src="output/weak/xiaoyi_撒娇.mp3"></audio>
+                </div>
+                <div class="audio-box">
+                    <div class="audio-label">😮‍💨 虚弱</div>
+                    <audio controls src="output/weak/xiaoyi_虚弱.mp3"></audio>
+                </div>
+                <div class="audio-box">
+                    <div class="audio-label">😘 互动</div>
+                    <audio controls src="output/weak/xiaoyi_互动.mp3"></audio>
+                </div>
+            </div>
+        </div>
+
+        <div class="comparison">
+            <h3>📊 版本对比</h3>
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>特性</th>
+                        <th>原版</th>
+                        <th>优化版</th>
+                        <th>粘人版</th>
+                        <th>柔弱版 ⭐</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>语速</strong></td>
+                        <td>正常 (0%)</td>
+                        <td>-5%</td>
+                        <td>-10%</td>
+                        <td>-20%</td>
+                    </tr>
+                    <tr>
+                        <td><strong>音量</strong></td>
+                        <td>正常 (0%)</td>
+                        <td>0%</td>
+                        <td>0%</td>
+                        <td>-10%</td>
+                    </tr>
+                    <tr>
+                        <td><strong>呼吸声</strong></td>
+                        <td>无</td>
+                        <td>无</td>
+                        <td>无</td>
+                        <td>呼～呼...</td>
+                    </tr>
+                    <tr>
+                        <td><strong>停顿</strong></td>
+                        <td>无</td>
+                        <td>少量</td>
+                        <td>撒娇拖音</td>
+                        <td>大量 ...</td>
+                    </tr>
+                    <tr>
+                        <td><strong>延迟感</strong></td>
+                        <td>无</td>
+                        <td>轻微</td>
+                        <td>无</td>
+                        <td>明显</td>
+                    </tr>
+                    <tr>
+                        <td><strong>适合场景</strong></td>
+                        <td>正式</td>
+                        <td>通用</td>
+                        <td>娱乐带货</td>
+                        <td>ASMR/病娇</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="tips">
+            <h3>💡 柔弱话术技巧</h3>
+            <ul>
+                <li><strong>添加喘气声</strong>：句首加"呼～"，句中加"呼..."</li>
+                <li><strong>断断续续</strong>：用"..."表示说话停顿、无力</li>
+                <li><strong>示弱词汇</strong>："好累"、"别走"、"陪我"、"求求你"</li>
+                <li><strong>语速放慢</strong>：-20% 语速，模拟虚弱状态</li>
+                <li><strong>音量降低</strong>：-10% 音量，模拟轻声细语</li>
+                <li><strong>配合场景</strong>：刚运动完、生病、深夜疲惫时</li>
+            </ul>
+        </div>
+
+        <div class="warning">
+            <h4>⚠️ 使用注意</h4>
+            <p>柔弱版语音适合特定场景（ASMR、病娇角色扮演、深夜电台），不适合所有直播类型。过度使用可能影响观众体验，建议与其他版本混合使用。</p>
+        </div>
+
+        <div class="tips" style="margin-top: 20px;">
+            <h3>🎯 使用建议</h3>
+            <ul>
+                <li><strong>ASMR 直播</strong>：柔弱版效果最佳，配合耳语效果</li>
+                <li><strong>病娇角色扮演</strong>：完美匹配病娇人设</li>
+                <li><strong>深夜电台</strong>：疲惫感增加共鸣</li>
+                <li><strong>娱乐直播</strong>：适度使用，作为特色环节</li>
+                <li><strong>混合使用</strong>：重要内容用真人，特色内容用柔弱 TTS</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>

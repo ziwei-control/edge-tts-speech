@@ -179,10 +179,20 @@
             </div>
             <button class="record-btn" id="recordBtn" onclick="toggleRecording()">
                 <span>🎤</span>
-                <span id="recordText">按住说话（需 HTTPS）</span>
+                <span id="recordText">按住说话</span>
             </button>
+            <!-- HTTPS 提示 -->
+            <div id="httpsNotice" style="display: none; margin-top: 15px; padding: 15px; background: #fff3cd; border: 2px solid #ffc107; border-radius: 10px;">
+                <strong>⚠️ 当前为 HTTP 连接</strong><br>
+                <span style="font-size: 14px; color: #666;">
+                    浏览器限制：HTTP 无法使用麦克风<br>
+                    <a href="#" onclick="showHttpsGuide(); return false;" style="color: #007bff; text-decoration: underline;">
+                        👉 点击这里，1 分钟配置 HTTPS（免费）
+                    </a>
+                </span>
+            </div>
             <p style="text-align: center; margin-top: 10px; color: #999; font-size: 14px;">
-                ⚠️ 公网访问请使用文字输入，或配置 HTTPS 后使用语音
+                💡 也可以使用文字输入，无需 HTTPS
             </p>
         </div>
     </div>
@@ -196,6 +206,44 @@
         async function init() {
             await checkStatus();
             setupSceneButtons();
+            checkHTTPS();  // 检测是否需要 HTTPS 提示
+        }
+
+        // 检测 HTTP/HTTPS
+        function checkHTTPS() {
+            const isHTTPS = window.location.protocol === 'https:' || window.location.hostname === 'localhost';
+            if (!isHTTPS) {
+                document.getElementById('httpsNotice').style.display = 'block';
+                document.getElementById('recordText').textContent = '按住说话（需 HTTPS）';
+            }
+        }
+
+        // 显示 HTTPS 配置指南
+        function showHttpsGuide() {
+            const guide = `
+🔒 1 分钟配置 HTTPS（免费）
+
+方法 1：Cloudflare Tunnel（推荐）
+1. 在服务器终端执行：
+   bash /home/admin/projects/live-tts/setup_https.sh
+
+2. 等待获取 HTTPS 链接
+
+3. 访问链接即可使用语音输入！
+
+方法 2：SSH 隧道（无需配置）
+1. 本地电脑执行：
+   ssh -L 7091:localhost:7091 root@8.213.149.224
+
+2. 访问：http://localhost:7091/voice_chat.html
+
+3. localhost 可以使用麦克风！
+
+方法 3：文字输入（无需 HTTPS）
+直接使用下方的文字输入框，
+输入文字 → 按回车 → 听语音
+            `;
+            alert(guide);
         }
 
         async function checkStatus() {
@@ -230,6 +278,13 @@
         }
 
         async function startRecording() {
+            // 检查是否 HTTPS
+            const isHTTPS = window.location.protocol === 'https:' || window.location.hostname === 'localhost';
+            if (!isHTTPS) {
+                alert('⚠️ 浏览器安全限制\n\nHTTP 连接无法使用麦克风，请选择：\n\n1️⃣ 配置 HTTPS（推荐）\n   执行：bash /home/admin/projects/live-tts/setup_https.sh\n\n2️⃣ 使用 SSH 隧道\n   ssh -L 7091:localhost:7091 root@8.213.149.224\n\n3️⃣ 使用文字输入（无需 HTTPS）\n   直接使用下方输入框');
+                return;
+            }
+            
             try {
                 const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
                 mediaRecorder = new MediaRecorder(stream);
@@ -245,7 +300,13 @@
                 btn.classList.add('recording');
                 document.getElementById('recordText').textContent = '松开结束';
             } catch (error) {
-                alert('无法访问麦克风：' + error.message);
+                if (error.name === 'NotAllowedError') {
+                    alert('❌ 麦克风权限被拒绝\n\n请在浏览器地址栏点击锁图标，允许麦克风权限');
+                } else if (error.name === 'NotFoundError') {
+                    alert('❌ 未找到麦克风设备\n\n请检查麦克风是否连接正常');
+                } else {
+                    alert('❌ 无法访问麦克风：' + error.message);
+                }
             }
         }
 

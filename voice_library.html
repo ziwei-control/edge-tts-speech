@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎵 完整语音库 - 152 个音色</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        h1 {
+            text-align: center;
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 1.1em;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px 30px;
+            border-radius: 15px;
+            text-align: center;
+            min-width: 150px;
+        }
+
+        .stat-number {
+            font-size: 2.5em;
+            font-weight: bold;
+        }
+
+        .stat-label {
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+
+        .search-box {
+            max-width: 600px;
+            margin: 0 auto 30px;
+            position: relative;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 15px 50px 15px 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 50px;
+            font-size: 1em;
+            transition: all 0.3s;
+        }
+
+        .search-box input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .search-icon {
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.2em;
+            color: #999;
+        }
+
+        .filter-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 10px 20px;
+            border: 2px solid #667eea;
+            background: white;
+            color: #667eea;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 0.95em;
+            transition: all 0.3s;
+        }
+
+        .filter-btn:hover {
+            background: #667eea;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .filter-btn.active {
+            background: #667eea;
+            color: white;
+        }
+
+        .version-section {
+            margin-bottom: 40px;
+        }
+
+        .version-title {
+            font-size: 1.8em;
+            color: #667eea;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #667eea;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .voice-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .voice-card {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+        }
+
+        .voice-card:hover {
+            background: white;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            border-color: #667eea;
+            transform: translateY(-2px);
+        }
+
+        .play-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            color: white;
+            font-size: 1.2em;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+            flex-shrink: 0;
+        }
+
+        .play-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .play-btn.playing {
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .voice-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .voice-name {
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 5px;
+            font-size: 1em;
+        }
+
+        .voice-scene {
+            display: inline-block;
+            padding: 3px 10px;
+            background: #667eea;
+            color: white;
+            border-radius: 12px;
+            font-size: 0.8em;
+        }
+
+        .voice-file {
+            font-size: 0.75em;
+            color: #999;
+            margin-top: 3px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 60px 20px;
+            color: #999;
+            font-size: 1.2em;
+        }
+
+        .back-link {
+            text-align: center;
+            margin-top: 40px;
+        }
+
+        .back-link a {
+            color: #667eea;
+            text-decoration: none;
+            font-size: 1.1em;
+            padding: 10px 20px;
+            border: 2px solid #667eea;
+            border-radius: 25px;
+            transition: all 0.3s;
+        }
+
+        .back-link a:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        /* 版本颜色 */
+        .version-demo .version-title { color: #667eea; border-color: #667eea; }
+        .version-natural .version-title { color: #28a745; border-color: #28a745; }
+        .version-cute .version-title { color: #e83e8c; border-color: #e83e8c; }
+        .version-weak .version-title { color: #6c757d; border-color: #6c757d; }
+
+        @media (max-width: 768px) {
+            h1 { font-size: 1.8em; }
+            .stats { gap: 15px; }
+            .stat-card { min-width: 120px; padding: 15px 20px; }
+            .stat-number { font-size: 2em; }
+            .voice-grid { grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎵 完整语音库</h1>
+        <p class="subtitle">152 个精品音色，总有一款适合你</p>
+
+        <div class="stats">
+            <div class="stat-card">
+                <div class="stat-number" id="totalVoices">152</div>
+                <div class="stat-label">总音色数</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="totalVersions">4</div>
+                <div class="stat-label">版本</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="totalScenes">10+</div>
+                <div class="stat-label">场景</div>
+            </div>
+        </div>
+
+        <div class="search-box">
+            <input type="text" id="searchInput" placeholder="🔍 搜索语音（语音名、场景、文件名）..." oninput="filterVoices()">
+            <span class="search-icon">🔍</span>
+        </div>
+
+        <div class="filter-buttons">
+            <button class="filter-btn active" data-version="all">全部</button>
+            <button class="filter-btn" data-version="demo">🎵 原版 (80)</button>
+            <button class="filter-btn" data-version="natural">✨ 优化版 (24)</button>
+            <button class="filter-btn" data-version="cute">🎀 粘人版 (24)</button>
+            <button class="filter-btn" data-version="weak">🌙 柔弱版 (24)</button>
+        </div>
+
+        <div id="voiceContainer"></div>
+
+        <div class="back-link">
+            <a href="all_versions.html">← 返回对比页面</a>
+        </div>
+    </div>
+
+    <script>
+        // 语音数据
+        const voiceData = {
+            demo: [],
+            natural: [],
+            cute: [],
+            weak: []
+        };
+
+        // 场景翻译
+        const sceneNames = {
+            '通用': '🎵 通用',
+            '温柔': '🌸 温柔',
+            '可爱': '🎀 可爱',
+            '互动': '💬 互动',
+            '促销': '🔥 促销',
+            '活泼': '✨ 活泼',
+            '专业': '💼 专业',
+            '欢迎': '👋 欢迎',
+            '感谢': '🙏 感谢',
+            '撒娇': '💕 撒娇',
+            '求关注': '⭐ 求关注',
+            '互动': '💬 互动'
+        };
+
+        // 加载语音列表
+        async function loadVoices() {
+            const versions = ['demo', 'natural', 'cute', 'weak'];
+            const versionNames = {
+                demo: '🎵 原版',
+                natural: '✨ 优化版',
+                cute: '🎀 粘人版',
+                weak: '🌙 柔弱版'
+            };
+
+            for (const version of versions) {
+                try {
+                    const response = await fetch(`output/${version}/`);
+                    const text = await response.text();
+                    
+                    // 解析 HTML 目录列表
+                    const links = text.match(/href="([^"]+\.mp3)"/g) || [];
+                    
+                    for (const link of links) {
+                        const filename = link.match(/href="([^"]+)"/)[1];
+                        if (filename && !filename.startsWith('.')) {
+                            // 解析文件名：xiaoxiao_通用.mp3
+                            const nameMatch = filename.match(/(.+?)_(.+?)\.mp3$/);
+                            if (nameMatch) {
+                                const voiceName = nameMatch[1];
+                                const scene = nameMatch[2];
+                                
+                                voiceData[version].push({
+                                    filename: filename,
+                                    voiceName: voiceName,
+                                    scene: scene,
+                                    path: `output/${version}/${filename}`
+                                });
+                            }
+                        }
+                    }
+                } catch (error) {
+                    console.error(`加载 ${version} 失败:`, error);
+                }
+            }
+
+            renderVoices();
+            updateStats();
+        }
+
+        // 更新统计
+        function updateStats() {
+            const total = Object.values(voiceData).reduce((sum, arr) => sum + arr.length, 0);
+            document.getElementById('totalVoices').textContent = total;
+        }
+
+        // 渲染语音列表
+        function renderVoices(filter = 'all', search = '') {
+            const container = document.getElementById('voiceContainer');
+            container.innerHTML = '';
+
+            const versionNames = {
+                demo: '🎵 原版',
+                natural: '✨ 优化版',
+                cute: '🎀 粘人版',
+                weak: '🌙 柔弱版'
+            };
+
+            let hasResults = false;
+
+            for (const [version, voices] of Object.entries(voiceData)) {
+                if (filter !== 'all' && filter !== version) continue;
+
+                // 搜索过滤
+                let filteredVoices = voices;
+                if (search) {
+                    const searchLower = search.toLowerCase();
+                    filteredVoices = voices.filter(v => 
+                        v.voiceName.toLowerCase().includes(searchLower) ||
+                        v.scene.toLowerCase().includes(searchLower) ||
+                        v.filename.toLowerCase().includes(searchLower)
+                    );
+                }
+
+                if (filteredVoices.length === 0) continue;
+
+                hasResults = true;
+
+                const section = document.createElement('div');
+                section.className = `version-section version-${version}`;
+
+                const title = document.createElement('h2');
+                title.className = 'version-title';
+                title.innerHTML = `${versionNames[version]} <span style="font-size:0.6em; opacity:0.7">(${filteredVoices.length}个)</span>`;
+                section.appendChild(title);
+
+                const grid = document.createElement('div');
+                grid.className = 'voice-grid';
+
+                for (const voice of filteredVoices) {
+                    const card = document.createElement('div');
+                    card.className = 'voice-card';
+                    card.innerHTML = `
+                        <button class="play-btn" onclick="togglePlay(this, '${voice.path}')">▶</button>
+                        <div class="voice-info">
+                            <div class="voice-name">${voice.voiceName}</div>
+                            <div class="voice-scene">${sceneNames[voice.scene] || voice.scene}</div>
+                            <div class="voice-file">${voice.filename}</div>
+                        </div>
+                    `;
+                    grid.appendChild(card);
+                }
+
+                section.appendChild(grid);
+                container.appendChild(section);
+            }
+
+            if (!hasResults) {
+                container.innerHTML = `
+                    <div class="no-results">
+                        😕 没有找到匹配的语音
+                        <br><small>试试其他关键词？</small>
+                    </div>
+                `;
+            }
+        }
+
+        // 过滤功能
+        function filterVoices() {
+            const search = document.getElementById('searchInput').value;
+            const activeFilter = document.querySelector('.filter-btn.active').dataset.version;
+            renderVoices(activeFilter, search);
+        }
+
+        // 版本过滤
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                filterVoices();
+            });
+        });
+
+        // 播放控制
+        let currentAudio = null;
+        let currentBtn = null;
+
+        function togglePlay(btn, path) {
+            if (currentAudio) {
+                currentAudio.pause();
+                currentBtn.classList.remove('playing');
+                currentBtn.textContent = '▶';
+                
+                if (currentAudio.src.endsWith(path)) {
+                    currentAudio = null;
+                    currentBtn = null;
+                    return;
+                }
+            }
+
+            const audio = new Audio(path);
+            currentAudio = audio;
+            currentBtn = btn;
+
+            btn.classList.add('playing');
+            btn.textContent = '⏹';
+
+            audio.play();
+
+            audio.addEventListener('ended', () => {
+                btn.classList.remove('playing');
+                btn.textContent = '▶';
+                currentAudio = null;
+                currentBtn = null;
+            });
+
+            audio.addEventListener('error', (e) => {
+                console.error('播放失败:', e);
+                btn.classList.remove('playing');
+                btn.textContent = '❌';
+                setTimeout(() => {
+                    btn.textContent = '▶';
+                }, 2000);
+            });
+        }
+
+        // 页面加载时初始化
+        window.addEventListener('DOMContentLoaded', loadVoices);
+    </script>
+</body>
+</html>

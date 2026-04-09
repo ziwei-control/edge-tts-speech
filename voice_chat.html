@@ -519,7 +519,7 @@
                     const msgDiv = addAgentMessage(data.text || '语音已生成');
                     const audioDiv = document.createElement('div');
                     audioDiv.className = 'audio-player';
-                    audioDiv.innerHTML = `<audio controls autoplay src="${data.audio_path}"></audio>`;
+                    audioDiv.innerHTML = `<audio controls autoplay src="${data.url}"></audio>`;
                     msgDiv.querySelector('.bubble').appendChild(audioDiv);
                 } else {
                     addAgentMessage('❌ ' + (data.error || '生成失败'));
@@ -600,7 +600,7 @@
                         const msgDiv = addAgentMessage(speakData.text || '语音回复');
                         const audioDiv = document.createElement('div');
                         audioDiv.className = 'audio-player';
-                        audioDiv.innerHTML = `<audio controls autoplay src="${speakData.audio_path}"></audio>`;
+                        audioDiv.innerHTML = `<audio controls autoplay src="${speakData.url}"></audio>`;
                         msgDiv.querySelector('.bubble').appendChild(audioDiv);
                     }
                 } else {

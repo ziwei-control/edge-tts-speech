@@ -324,10 +324,39 @@
         async function processAudio(audioBlob) {
             addMessage('user', '🗣️ 语音消息已发送');
             try {
-                const formData = new FormData();
-                formData.append('audio', audioBlob);
-                // 演示模式：显示提示
-                addMessage('agent', '🤖 演示模式：语音识别服务未配置，实际使用时会调用 OpenClaw API 处理语音并返回 TTS 音频。');
+                // 步骤 1：语音识别（STT）- 将语音转为文字
+                const sttFormData = new FormData();
+                sttFormData.append('audio', audioBlob);
+                
+                const sttResponse = await fetch(`${API_BASE}/transcribe`, {
+                    method: 'POST',
+                    body: sttFormData
+                });
+                const sttData = await sttResponse.json();
+                
+                if (!sttData.success) {
+                    throw new Error(sttData.error || '语音识别失败');
+                }
+                
+                const recognizedText = sttData.text;
+                addMessage('user', `📝 "${recognizedText}"`);
+                
+                // 步骤 2：调用 TTS API 生成语音回复
+                const response = await fetch(`${API_BASE}/speak`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ text: recognizedText, scene: selectedScene })
+                });
+                const data = await response.json();
+                
+                if (data.success) {
+                    // 播放生成的语音
+                    const audio = new Audio(`${API_BASE}/audio/${data.filename}`);
+                    audio.play();
+                    addMessage('agent', `🔊 ${recognizedText} <br><small>（语音已播放）</small>`);
+                } else {
+                    addMessage('agent', '❌ 生成失败：' + (data.error || '未知错误'));
+                }
             } catch (error) {
                 addMessage('agent', '❌ 错误：' + error.message);
             }

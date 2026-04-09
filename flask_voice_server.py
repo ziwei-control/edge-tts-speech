@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""简单的 Flask Web 服务器，带 CORS 支持"""
+"""Flask Web 服务器，支持 TTS 和 STT"""
 
 from flask import Flask, send_from_directory, jsonify, request
 import requests
@@ -9,6 +9,8 @@ app = Flask(__name__)
 
 # TTS API 地址
 TTS_API_URL = "http://localhost:7086"
+# STT API 地址
+STT_API_URL = "http://localhost:5050"
 
 @app.route('/')
 def index():
@@ -37,6 +39,17 @@ def speak():
     except Exception as e:
         return jsonify({"success": False, "error": str(e)}), 500
 
+@app.route('/api/transcribe', methods=['POST'])
+def transcribe():
+    """代理语音识别（STT）"""
+    try:
+        # 转发音频文件到 STT 服务
+        files = request.files
+        resp = requests.post(f"{STT_API_URL}/transcribe", files=files, timeout=60)
+        return jsonify(resp.json())
+    except Exception as e:
+        return jsonify({"success": False, "error": str(e)}), 500
+
 @app.route('/api/audio/<filename>')
 def audio(filename):
     """代理音频文件"""
@@ -52,6 +65,7 @@ if __name__ == '__main__':
     print("=" * 60)
     print("📡 地址：http://localhost:7091")
     print("📄 页面：http://localhost:7091/voice_chat.html")
-    print("🔌 API:  http://localhost:7091/api/*")
+    print("🔌 TTS API:  http://localhost:7091/api/speak")
+    print("🎤 STT API:  http://localhost:7091/api/transcribe")
     print("=" * 60)
     app.run(host='0.0.0.0', port=7091, debug=False)

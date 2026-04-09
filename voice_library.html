@@ -337,43 +337,24 @@
 
         // 加载语音列表
         async function loadVoices() {
-            const versions = ['demo', 'natural', 'cute', 'weak'];
-            const versionNames = {
-                demo: '🎵 原版',
-                natural: '✨ 优化版',
-                cute: '🎀 粘人版',
-                weak: '🌙 柔弱版'
-            };
-
-            for (const version of versions) {
-                try {
-                    const response = await fetch(`output/${version}/`);
-                    const text = await response.text();
-                    
-                    // 解析 HTML 目录列表
-                    const links = text.match(/href="([^"]+\.mp3)"/g) || [];
-                    
-                    for (const link of links) {
-                        const filename = link.match(/href="([^"]+)"/)[1];
-                        if (filename && !filename.startsWith('.')) {
-                            // 解析文件名：xiaoxiao_通用.mp3
-                            const nameMatch = filename.match(/(.+?)_(.+?)\.mp3$/);
-                            if (nameMatch) {
-                                const voiceName = nameMatch[1];
-                                const scene = nameMatch[2];
-                                
-                                voiceData[version].push({
-                                    filename: filename,
-                                    voiceName: voiceName,
-                                    scene: scene,
-                                    path: `output/${version}/${filename}`
-                                });
-                            }
-                        }
-                    }
-                } catch (error) {
-                    console.error(`加载 ${version} 失败:`, error);
+            try {
+                const response = await fetch('voice_data.json');
+                const data = await response.json();
+                
+                voiceData.demo = data.demo || [];
+                voiceData.natural = data.natural || [];
+                voiceData.cute = data.cute || [];
+                voiceData.weak = data.weak || [];
+                
+                // 添加路径
+                for (const [version, voices] of Object.entries(voiceData)) {
+                    voices.forEach(voice => {
+                        voice.path = `output/${version}/${voice.filename}`;
+                    });
                 }
+            } catch (error) {
+                console.error('加载语音数据失败:', error);
+                alert('加载失败，请刷新页面重试');
             }
 
             renderVoices();

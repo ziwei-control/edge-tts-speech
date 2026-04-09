@@ -35,7 +35,13 @@ def speak():
     try:
         data = request.get_json()
         resp = requests.post(f"{TTS_API_URL}/speak", json=data, timeout=30)
-        return jsonify(resp.json())
+        result = resp.json()
+        
+        # 修改音频 URL 为当前服务器的路径
+        if result.get('success') and result.get('filename'):
+            result['url'] = f"/api/audio/{result['filename']}"
+        
+        return jsonify(result)
     except Exception as e:
         return jsonify({"success": False, "error": str(e)}), 500
 
@@ -54,10 +60,26 @@ def transcribe():
 def audio(filename):
     """代理音频文件"""
     try:
-        filepath = f"output/api/{filename}"
         return send_from_directory("output/api", filename)
     except Exception as e:
         return jsonify({"error": str(e)}), 404
+
+@app.route('/api/audio_info/<filename>')
+def audio_info(filename):
+    """获取音频信息（用于调试）"""
+    try:
+        filepath = f"output/api/{filename}"
+        if os.path.exists(filepath):
+            size = os.path.getsize(filepath)
+            return jsonify({
+                "exists": True,
+                "size": size,
+                "filename": filename
+            })
+        else:
+            return jsonify({"exists": False, "filename": filename}), 404
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 if __name__ == '__main__':
     print("=" * 60)

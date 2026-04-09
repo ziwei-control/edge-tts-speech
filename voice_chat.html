@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🎤 OpenClaw 语音交互</title>
+    <title>🎤 OpenClaw 语音交互 - 支持 152 个音色</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
@@ -19,7 +19,7 @@
             background: white;
             border-radius: 20px;
             box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-            max-width: 600px;
+            max-width: 700px;
             width: 100%;
             overflow: hidden;
         }
@@ -30,6 +30,7 @@
             text-align: center;
         }
         .header h1 { font-size: 2em; margin-bottom: 10px; }
+        .header p { opacity: 0.9; }
         .status-bar {
             background: #f5f5f5;
             padding: 15px 30px;
@@ -52,7 +53,7 @@
             50% { opacity: 0.5; }
         }
         .chat-area {
-            height: 400px;
+            height: 350px;
             overflow-y: auto;
             padding: 30px;
             background: #fafafa;
@@ -88,52 +89,170 @@
             border-bottom-right-radius: 5px;
         }
         .bubble-text { margin-bottom: 10px; line-height: 1.5; }
+        .audio-player {
+            background: #f0f0f0;
+            padding: 10px;
+            border-radius: 10px;
+            margin-top: 10px;
+        }
+        audio { width: 100%; height: 35px; }
         .controls {
-            padding: 30px;
+            padding: 20px 30px;
             background: white;
             border-top: 1px solid #e0e0e0;
         }
+        
+        /* 语音选择器 */
+        .voice-selector-container {
+            margin-bottom: 15px;
+        }
+        .voice-selector-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .voice-selector-header h3 {
+            font-size: 0.95em;
+            color: #666;
+        }
+        .voice-link {
+            font-size: 0.85em;
+            color: #667eea;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        .voice-link:hover { text-decoration: underline; }
+        .voice-selector {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            max-height: 150px;
+            overflow-y: auto;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border: 2px solid #e0e0e0;
+        }
+        .voice-option {
+            padding: 6px 12px;
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 20px;
+            font-size: 0.85em;
+            cursor: pointer;
+            transition: all 0.3s;
+            white-space: nowrap;
+        }
+        .voice-option:hover {
+            border-color: #667eea;
+            background: #f0f0ff;
+            transform: translateY(-2px);
+        }
+        .voice-option.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-color: #667eea;
+        }
+        
         .scene-selector {
-            display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap;
+            display: flex; gap: 8px; margin-bottom: 15px; flex-wrap: wrap;
         }
         .scene-btn {
             padding: 8px 16px;
             border: 2px solid #e0e0e0;
-            border-radius: 20px;
             background: white;
+            border-radius: 20px;
             cursor: pointer;
+            font-size: 0.9em;
             transition: all 0.3s;
-            font-size: 14px;
         }
-        .scene-btn:hover { border-color: #667eea; }
-        .scene-btn.active {
+        .scene-btn:hover {
             border-color: #667eea;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
+            background: #f0f0ff;
         }
-        .record-btn {
-            width: 100%;
-            padding: 20px;
+        .scene-btn.active {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
-            border: none;
-            border-radius: 15px;
-            font-size: 18px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
+            border-color: #667eea;
+        }
+        .input-area {
             display: flex;
-            justify-content: center;
-            align-items: center;
             gap: 10px;
+            align-items: center;
         }
-        .record-btn:hover {
+        .input-field {
+            flex: 1;
+            padding: 12px 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 25px;
+            font-size: 1em;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+        .input-field:focus {
+            border-color: #667eea;
+        }
+        .send-btn, .voice-btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: all 0.3s;
+        }
+        .send-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        .send-btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
         }
-        .record-btn.recording {
+        .voice-btn {
+            background: #f0f0f0;
+            color: #333;
+        }
+        .voice-btn:hover {
+            background: #e0e0e0;
+        }
+        .voice-btn.recording {
             background: #ef4444;
-            animation: pulse 0.5s infinite;
+            color: white;
+            animation: pulse 1s infinite;
+        }
+        .typing-indicator {
+            display: flex;
+            gap: 5px;
+            padding: 15px 20px;
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 15px;
+            max-width: 100px;
+        }
+        .typing-dot {
+            width: 8px; height: 8px;
+            border-radius: 50%;
+            background: #999;
+            animation: typing 1.4s infinite;
+        }
+        .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+        .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+        @keyframes typing {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+        .error-msg {
+            color: #ef4444;
+            font-size: 0.9em;
+            margin-top: 10px;
+            text-align: center;
+        }
+        .voice-info {
+            font-size: 0.8em;
+            color: #999;
+            margin-top: 5px;
+            text-align: center;
         }
     </style>
 </head>
@@ -141,25 +260,43 @@
     <div class="container">
         <div class="header">
             <h1>🎤 OpenClaw 语音交互</h1>
-            <p>说话即可与 AI 对话，支持 6 种语音风格</p>
+            <p>支持 152 个音色 · 实时语音对话</p>
         </div>
+        
         <div class="status-bar">
             <div class="status">
                 <div class="status-dot" id="statusDot"></div>
                 <span id="statusText">连接中...</span>
             </div>
-            <div>🎭 场景：<strong id="currentScene">通用</strong></div>
+            <div style="font-size: 0.9em; color: #666;">
+                 <span id="currentTime"></span>
+            </div>
         </div>
+        
         <div class="chat-area" id="chatArea">
             <div class="message agent">
                 <div class="avatar">🤖</div>
                 <div class="bubble">
-                    <div class="bubble-text">你好！我是 OpenClaw 智能助手，点击下面的按钮开始语音对话吧！</div>
+                    <div class="bubble-text">你好！我是你的语音助手～<br>支持 152 个音色可选哦！<br><br>🎵 你可以：<br>• 输入文字，我转语音回复<br>• 按住说话，语音对话<br>• 点击上方音色切换声音</div>
                 </div>
             </div>
         </div>
+        
         <div class="controls">
-            <div class="scene-selector">
+            <!-- 语音选择器 -->
+            <div class="voice-selector-container">
+                <div class="voice-selector-header">
+                    <h3>🎵 选择音色（<span id="currentVoiceName">xiaoxiao</span>）</h3>
+                    <span class="voice-link" onclick="toggleVoiceSelector()">展开全部 152 个音色 ▼</span>
+                </div>
+                <div class="voice-selector" id="voiceSelector">
+                    <!-- 动态加载 -->
+                </div>
+                <div class="voice-info">已加载 <span id="voiceCount">0</span> 个音色 · 点击切换</div>
+            </div>
+            
+            <!-- 场景选择 -->
+            <div class="scene-selector" id="sceneSelector">
                 <button class="scene-btn active" data-scene="default">🎵 通用</button>
                 <button class="scene-btn" data-scene="gentle">🌸 温柔</button>
                 <button class="scene-btn" data-scene="cute">🎀 可爱</button>
@@ -167,247 +304,314 @@
                 <button class="scene-btn" data-scene="promotion">🔥 促销</button>
                 <button class="scene-btn" data-scene="weak">🌙 柔弱</button>
             </div>
-            <!-- 文字输入框 -->
-            <div style="margin-bottom: 20px; display: flex; gap: 10px;">
-                <input type="text" id="textInput" placeholder="输入文字，按回车发送..." 
-                       style="flex: 1; padding: 15px; border: 2px solid #e0e0e0; border-radius: 15px; font-size: 16px; outline: none;"
-                       onkeypress="if(event.key==='Enter') sendText()">
-                <button onclick="sendText()" 
-                        style="padding: 15px 30px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 15px; font-size: 16px; cursor: pointer; font-weight: 600;">
-                    发送
+            
+            <!-- 输入区域 -->
+            <div class="input-area">
+                <input 
+                    type="text" 
+                    class="input-field" 
+                    id="textInput" 
+                    placeholder="输入文字，按回车发送..."
+                    onkeypress="if(event.key==='Enter') sendText()"
+                >
+                <button class="voice-btn" id="voiceBtn" onmousedown="startRecording()" onmouseup="stopRecording()" ontouchstart="startRecording()" ontouchend="stopRecording()">
+                    🎤 按住说话
                 </button>
+                <button class="send-btn" onclick="sendText()">发送</button>
             </div>
-            <button class="record-btn" id="recordBtn" onclick="toggleRecording()">
-                <span>🎤</span>
-                <span id="recordText">按住说话</span>
-            </button>
-            <!-- HTTPS 提示 -->
-            <div id="httpsNotice" style="display: none; margin-top: 15px; padding: 15px; background: #fff3cd; border: 2px solid #ffc107; border-radius: 10px;">
-                <strong>⚠️ 当前为 HTTP 连接</strong><br>
-                <span style="font-size: 14px; color: #666;">
-                    浏览器限制：HTTP 无法使用麦克风<br>
-                    <a href="#" onclick="showHttpsGuide(); return false;" style="color: #007bff; text-decoration: underline;">
-                        👉 点击这里，1 分钟配置 HTTPS（免费）
-                    </a>
-                </span>
-            </div>
-            <p style="text-align: center; margin-top: 10px; color: #999; font-size: 14px;">
-                💡 也可以使用文字输入，无需 HTTPS
-            </p>
+            <div class="error-msg" id="errorMsg"></div>
         </div>
     </div>
+
     <script>
-        const API_BASE = '/api';  // 使用同端口代理，避免跨域
-        let selectedScene = 'default';
-        let isRecording = false;
-        let mediaRecorder = null;
+        const API_BASE = '/api';
+        let currentScene = 'default';
+        let currentVoice = 'xiaoxiao'; // 默认语音
+        let mediaRecorder;
         let audioChunks = [];
+        let isRecording = false;
+        let voiceData = {};
+        let voiceSelectorExpanded = false;
 
-        async function init() {
-            await checkStatus();
-            setupSceneButtons();
-            checkHTTPS();  // 检测是否需要 HTTPS 提示
-        }
+        // 场景配置
+        const sceneConfig = {
+            default: { emoji: '🎵', name: '通用', rate: -5 },
+            gentle: { emoji: '🌸', name: '温柔', rate: -10 },
+            cute: { emoji: '🎀', name: '可爱', rate: -10 },
+            professional: { emoji: '💼', name: '专业', rate: 0 },
+            promotion: { emoji: '🔥', name: '促销', rate: 0 },
+            weak: { emoji: '🌙', name: '柔弱', rate: -20 }
+        };
 
-        // 检测 HTTP/HTTPS
-        function checkHTTPS() {
-            const isHTTPS = window.location.protocol === 'https:' || window.location.hostname === 'localhost';
-            if (!isHTTPS) {
-                document.getElementById('httpsNotice').style.display = 'block';
-                document.getElementById('recordText').textContent = '按住说话（需 HTTPS）';
-            }
-        }
-
-        // 显示 HTTPS 配置指南
-        function showHttpsGuide() {
-            const guide = `
-🔒 1 分钟配置 HTTPS（免费）
-
-方法 1：Cloudflare Tunnel（推荐）
-1. 在服务器终端执行：
-   bash /home/admin/projects/live-tts/setup_https.sh
-
-2. 等待获取 HTTPS 链接
-
-3. 访问链接即可使用语音输入！
-
-方法 2：SSH 隧道（无需配置）
-1. 本地电脑执行：
-   ssh -L 7091:localhost:7091 root@8.213.149.224
-
-2. 访问：http://localhost:7091/voice_chat.html
-
-3. localhost 可以使用麦克风！
-
-方法 3：文字输入（无需 HTTPS）
-直接使用下方的文字输入框，
-输入文字 → 按回车 → 听语音
-            `;
-            alert(guide);
-        }
-
-        async function checkStatus() {
+        // 加载语音数据
+        async function loadVoiceData() {
             try {
-                const response = await fetch(`${API_BASE}/health`);
-                const data = await response.json();
-                document.getElementById('statusDot').classList.add('online');
-                document.getElementById('statusText').textContent = '服务正常';
+                const response = await fetch('voice_data.json');
+                voiceData = await response.json();
+                
+                // 提取所有唯一的语音名
+                const allVoices = new Set();
+                Object.values(voiceData).forEach(voices => {
+                    voices.forEach(v => allVoices.add(v.voiceName));
+                });
+                
+                const voiceList = Array.from(allVoices).sort();
+                renderVoiceSelector(voiceList);
+                document.getElementById('voiceCount').textContent = voiceList.length;
             } catch (error) {
-                document.getElementById('statusText').textContent = '服务未连接';
+                console.error('加载语音数据失败:', error);
+                // 使用默认语音列表
+                const defaultVoices = ['xiaoxiao', 'xiaoyi', 'xiaoxuan', 'xiaomo', 'yunhao', 'yunye'];
+                renderVoiceSelector(defaultVoices);
+                document.getElementById('voiceCount').textContent = defaultVoices.length;
             }
         }
 
-        function setupSceneButtons() {
-            const buttons = document.querySelectorAll('.scene-btn');
-            buttons.forEach(btn => {
-                btn.addEventListener('click', () => {
-                    buttons.forEach(b => b.classList.remove('active'));
-                    btn.classList.add('active');
-                    selectedScene = btn.dataset.scene;
-                    document.getElementById('currentScene').textContent = btn.textContent.split(' ')[1];
-                });
+        // 渲染语音选择器
+        function renderVoiceSelector(voices) {
+            const container = document.getElementById('voiceSelector');
+            container.innerHTML = '';
+            
+            voices.forEach(voice => {
+                const option = document.createElement('div');
+                option.className = 'voice-option' + (voice === currentVoice ? ' active' : '');
+                option.textContent = voice;
+                option.onclick = () => selectVoice(voice);
+                container.appendChild(option);
             });
         }
 
-        async function toggleRecording() {
-            if (isRecording) {
-                stopRecording();
+        // 切换语音选择器显示
+        function toggleVoiceSelector() {
+            voiceSelectorExpanded = !voiceSelectorExpanded;
+            const container = document.getElementById('voiceSelector');
+            const link = document.querySelector('.voice-link');
+            
+            if (voiceSelectorExpanded) {
+                // 显示所有语音
+                const allVoices = new Set();
+                Object.values(voiceData).forEach(voices => {
+                    voices.forEach(v => allVoices.add(v.voiceName));
+                });
+                renderVoiceSelector(Array.from(allVoices).sort());
+                container.style.maxHeight = '300px';
+                link.textContent = '收起 ▲';
             } else {
-                await startRecording();
+                // 只显示常用语音
+                const commonVoices = ['xiaoxiao', 'xiaoyi', 'xiaoxuan', 'xiaomo', 'yunhao', 'yunye'];
+                renderVoiceSelector(commonVoices);
+                container.style.maxHeight = '150px';
+                link.textContent = '展开全部 152 个音色 ▼';
+            }
+        }
+
+        // 选择语音
+        function selectVoice(voice) {
+            currentVoice = voice;
+            document.getElementById('currentVoiceName').textContent = voice;
+            
+            // 更新选中状态
+            document.querySelectorAll('.voice-option').forEach(opt => {
+                opt.classList.toggle('active', opt.textContent === voice);
+            });
+            
+            // 添加提示
+            addAgentMessage(`已切换到 ${voice} 音色 ✨`);
+        }
+
+        // 初始化
+        document.addEventListener('DOMContentLoaded', () => {
+            loadVoiceData();
+            updateStatus();
+            updateTime();
+            setInterval(updateTime, 1000);
+            
+            // 场景选择
+            document.querySelectorAll('.scene-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    document.querySelectorAll('.scene-btn').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    currentScene = this.dataset.scene;
+                });
+            });
+        });
+
+        function updateStatus() {
+            const dot = document.getElementById('statusDot');
+            const text = document.getElementById('statusText');
+            dot.classList.add('online');
+            text.textContent = '在线';
+        }
+
+        function updateTime() {
+            const now = new Date();
+            document.getElementById('currentTime').textContent = 
+                now.toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit' });
+        }
+
+        function addMessage(text, isUser = false) {
+            const chatArea = document.getElementById('chatArea');
+            const msgDiv = document.createElement('div');
+            msgDiv.className = `message ${isUser ? 'user' : 'agent'}`;
+            msgDiv.innerHTML = `
+                <div class="avatar">${isUser ? '👤' : '🤖'}</div>
+                <div class="bubble">
+                    <div class="bubble-text">${text}</div>
+                </div>
+            `;
+            chatArea.appendChild(msgDiv);
+            chatArea.scrollTop = chatArea.scrollHeight;
+            return msgDiv;
+        }
+
+        function addAgentMessage(text) {
+            return addMessage(text, false);
+        }
+
+        function showTyping() {
+            const chatArea = document.getElementById('chatArea');
+            const typingDiv = document.createElement('div');
+            typingDiv.className = 'message agent';
+            typingDiv.id = 'typingIndicator';
+            typingDiv.innerHTML = `
+                <div class="avatar">🤖</div>
+                <div class="bubble">
+                    <div class="typing-indicator">
+                        <div class="typing-dot"></div>
+                        <div class="typing-dot"></div>
+                        <div class="typing-dot"></div>
+                    </div>
+                </div>
+            `;
+            chatArea.appendChild(typingDiv);
+            chatArea.scrollTop = chatArea.scrollHeight;
+        }
+
+        function removeTyping() {
+            const typing = document.getElementById('typingIndicator');
+            if (typing) typing.remove();
+        }
+
+        async function sendText() {
+            const input = document.getElementById('textInput');
+            const text = input.value.trim();
+            if (!text) return;
+
+            addMessage(text, true);
+            input.value = '';
+
+            showTyping();
+            try {
+                const response = await fetch(`${API_BASE}/speak`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        text: text,
+                        scene: currentScene,
+                        voice: currentVoice
+                    })
+                });
+
+                const data = await response.json();
+                removeTyping();
+
+                if (data.success) {
+                    const msgDiv = addAgentMessage(data.text || '语音已生成');
+                    const audioDiv = document.createElement('div');
+                    audioDiv.className = 'audio-player';
+                    audioDiv.innerHTML = `<audio controls autoplay src="${data.audio_path}"></audio>`;
+                    msgDiv.querySelector('.bubble').appendChild(audioDiv);
+                } else {
+                    addAgentMessage('❌ ' + (data.error || '生成失败'));
+                }
+            } catch (error) {
+                removeTyping();
+                addAgentMessage('❌ 请求失败：' + error.message);
             }
         }
 
         async function startRecording() {
-            // 检查是否 HTTPS
-            const isHTTPS = window.location.protocol === 'https:' || window.location.hostname === 'localhost';
-            if (!isHTTPS) {
-                alert('⚠️ 浏览器安全限制\n\nHTTP 连接无法使用麦克风，请选择：\n\n1️⃣ 配置 HTTPS（推荐）\n   执行：bash /home/admin/projects/live-tts/setup_https.sh\n\n2️⃣ 使用 SSH 隧道\n   ssh -L 7091:localhost:7091 root@8.213.149.224\n\n3️⃣ 使用文字输入（无需 HTTPS）\n   直接使用下方输入框');
-                return;
-            }
+            const btn = document.getElementById('voiceBtn');
+            const errorMsg = document.getElementById('errorMsg');
             
             try {
                 const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
                 mediaRecorder = new MediaRecorder(stream);
                 audioChunks = [];
-                mediaRecorder.ondataavailable = (event) => audioChunks.push(event.data);
-                mediaRecorder.onstop = async () => {
-                    const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
-                    await processAudio(audioBlob);
-                };
+
+                mediaRecorder.ondataavailable = event => audioChunks.push(event.data);
+                mediaRecorder.onstop = sendAudio;
+
                 mediaRecorder.start();
                 isRecording = true;
-                const btn = document.getElementById('recordBtn');
                 btn.classList.add('recording');
-                document.getElementById('recordText').textContent = '松开结束';
+                btn.textContent = '🔴 录音中...';
+                errorMsg.textContent = '';
             } catch (error) {
-                if (error.name === 'NotAllowedError') {
-                    alert('❌ 麦克风权限被拒绝\n\n请在浏览器地址栏点击锁图标，允许麦克风权限');
-                } else if (error.name === 'NotFoundError') {
-                    alert('❌ 未找到麦克风设备\n\n请检查麦克风是否连接正常');
-                } else {
-                    alert('❌ 无法访问麦克风：' + error.message);
-                }
+                errorMsg.textContent = '⚠️ 麦克风权限被拒绝。请使用文字输入，或确保使用 HTTPS 访问。';
+                console.error('录音失败:', error);
             }
         }
 
         function stopRecording() {
-            if (mediaRecorder && mediaRecorder.state !== 'inactive') {
-                mediaRecorder.stop();
-                mediaRecorder.stream.getTracks().forEach(track => track.stop());
-            }
+            if (!isRecording) return;
             isRecording = false;
-            const btn = document.getElementById('recordBtn');
+            const btn = document.getElementById('voiceBtn');
             btn.classList.remove('recording');
-            document.getElementById('recordText').textContent = '按住说话';
-        }
-
-        async function processAudio(audioBlob) {
-            addMessage('user', '🗣️ 语音消息已发送');
-            try {
-                // 步骤 1：语音识别（STT）- 将语音转为文字
-                const sttFormData = new FormData();
-                sttFormData.append('audio', audioBlob);
-                
-                const sttResponse = await fetch(`${API_BASE}/transcribe`, {
-                    method: 'POST',
-                    body: sttFormData
-                });
-                const sttData = await sttResponse.json();
-                
-                if (!sttData.success) {
-                    throw new Error(sttData.error || '语音识别失败');
-                }
-                
-                const recognizedText = sttData.text;
-                addMessage('user', `📝 "${recognizedText}"`);
-                
-                // 步骤 2：调用 TTS API 生成语音回复
-                const response = await fetch(`${API_BASE}/speak`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ text: recognizedText, scene: selectedScene })
-                });
-                const data = await response.json();
-                
-                if (data.success) {
-                    // 播放生成的语音
-                    const audio = new Audio(`${API_BASE}/audio/${data.filename}`);
-                    audio.play();
-                    addMessage('agent', `🔊 ${recognizedText} <br><small>（语音已播放）</small>`);
-                } else {
-                    addMessage('agent', '❌ 生成失败：' + (data.error || '未知错误'));
-                }
-            } catch (error) {
-                addMessage('agent', '❌ 错误：' + error.message);
+            btn.textContent = '🎤 按住说话';
+            if (mediaRecorder && mediaRecorder.state === 'recording') {
+                mediaRecorder.stop();
             }
         }
 
-        // 文字输入发送
-        async function sendText() {
-            const input = document.getElementById('textInput');
-            const text = input.value.trim();
-            if (!text) return;
-            
-            addMessage('user', '📝 ' + text);
-            input.value = '';
-            
+        async function sendAudio() {
+            if (audioChunks.length === 0) return;
+
+            const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+            const formData = new FormData();
+            formData.append('audio', audioBlob, 'recording.webm');
+
+            showTyping();
             try {
-                // 调用 TTS API 生成语音
-                const response = await fetch(`${API_BASE}/speak`, {
+                // 先转文字
+                const transcribeResponse = await fetch(`${API_BASE}/transcribe`, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ text: text, scene: selectedScene })
+                    body: formData
                 });
-                const data = await response.json();
-                
-                if (data.success) {
-                    // 播放生成的语音
-                    const audio = new Audio(`${API_BASE}/audio/${data.filename}`);
-                    audio.play();
-                    addMessage('agent', '🔊 ' + text + ' <br><small>（语音已播放）</small>');
+                const transcribeData = await transcribeResponse.json();
+
+                if (transcribeData.success) {
+                    addMessage(`[语音] ${transcribeData.text}`, true);
+                    
+                    // 再 TTS 回复
+                    const speakResponse = await fetch(`${API_BASE}/speak`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            text: transcribeData.text,
+                            scene: currentScene,
+                            voice: currentVoice
+                        })
+                    });
+                    const speakData = await speakResponse.json();
+                    removeTyping();
+
+                    if (speakData.success) {
+                        const msgDiv = addAgentMessage(speakData.text || '语音回复');
+                        const audioDiv = document.createElement('div');
+                        audioDiv.className = 'audio-player';
+                        audioDiv.innerHTML = `<audio controls autoplay src="${speakData.audio_path}"></audio>`;
+                        msgDiv.querySelector('.bubble').appendChild(audioDiv);
+                    }
                 } else {
-                    addMessage('agent', '❌ 生成失败：' + (data.error || '未知错误'));
+                    removeTyping();
+                    addAgentMessage('❌ 识别失败：' + (transcribeData.error || '未知错误'));
                 }
             } catch (error) {
-                addMessage('agent', '❌ 错误：' + error.message);
+                removeTyping();
+                addAgentMessage('❌ 请求失败：' + error.message);
             }
         }
-
-        function addMessage(role, text) {
-            const chatArea = document.getElementById('chatArea');
-            const messageDiv = document.createElement('div');
-            messageDiv.className = `message ${role}`;
-            messageDiv.innerHTML = `
-                <div class="avatar">${role === 'agent' ? '🤖' : '👤'}</div>
-                <div class="bubble">
-                    <div class="bubble-text">${text}</div>
-                </div>
-            `;
-            chatArea.appendChild(messageDiv);
-            chatArea.scrollTop = chatArea.scrollHeight;
-        }
-
-        window.addEventListener('DOMContentLoaded', init);
     </script>
 </body>
 </html>
